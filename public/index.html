@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>sterfly - Social Butterfly</title>
+    <link href="css/lib/bootstrap.min.css" rel="stylesheet">
+    <link href="css/lib/bootstrap-responsive.min.css" rel="stylesheet">
+    <link href="css/lib/font-awesome.min.css" rel="stylesheet">
+    <link href="css/app.css" rel="stylesheet">
+  </head>
+  <body>
+  
+    <script type="text/x-handlebars" data-template-name="application">
+      <div class="container">
+        <div class="navbar">
+          <div class="navbar-inner">
+            {{#linkTo index class="brand"}}Sterfly{{/linkTo}}
+            <ul class="nav">
+              <li>{{#linkTo index}}Home{{/linkTo}}</li>
+              <li>{{#linkTo users}}Users{{/linkTo}}</li>
+              <li>{{#linkTo events}}Events{{/linkTo}}</li>
+            </ul>
+          </div>
+        </div>
+        <div>
+          {{outlet}}
+        </div>
+      </div>  
+    </script>
+
+    <script type="text/x-handlebars" data-template-name="index">
+      <h2>Welcome home</h2>
+    </script>
+      
+    <script type="text/x-handlebars" data-template-name="users">
+      <div class="row-fluid">
+        <div class="span3">
+          <button class="btn btn-success btn-large">Create a new profile</button>
+          <ul class="nav nav-pills nav-stacked">
+          {{#each user in model}}
+            <li>{{#linkTo 'user' user}} {{user.firstName}} {{user.lastName}} {{/linkTo}}</li>
+          {{/each}}
+          </ul>
+        </div>
+        <div class="span9">
+          {{outlet}}
+        </div>
+      </div>
+    </script>
+
+    <script type="text/x-handlebars" data-template-name="user">
+      <h2>{{firstName}} {{lastName}}</h2>
+      {{#if isEditing}}
+        {{partial 'user/edit'}}
+        <button class="btn btn-warning" {{action 'done'}}>Cancel</button>
+        <button class="btn btn-primary" {{action 'done'}}>Done</button>
+        <button class="btn btn-danger" {{action 'done'}}>Delete Account</button>
+      {{else}}
+        <button class="btn" {{action 'edit'}}>Edit</button>
+      {{/if}}
+    </script>
+
+    <script type="text/x-handlebars" data-template-name="user/_edit">
+      <p><label for="firstName">First name: </label>{{view Ember.TextField valueBinding="firstName"}}</p>
+      <p><label for="lastName">Last name: </label>{{view Ember.TextField valueBinding="lastName"}}</p>
+    </script>
+    
+    <script type="text/x-handlebars" data-template-name="events">
+      <h2>Events</h2>
+    </script>
+      
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="js/lib/handlebars-1.0.0-rc.3.js"></script>
+    <script src="js/lib/ember-1.0.0-rc.2.js"></script>
+    <script src="js/lib/ember-data.js"></script>
+    <script src="js/lib/bootstrap.min.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>
