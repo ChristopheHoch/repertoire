@@ -5,13 +5,12 @@
 var express = require('express')
   , http = require('http')
   , path = require('path')
-  , mongoose = require('mongoose')
-  , config = require('./config');
+  , mongoose = require('mongoose');
 
 /**
  * Set up the database conection
  */
-mongoose.connect(config.creds.mongoose_auth);
+mongoose.connect(process.env.MONGO_URL);
 
 /**
  * Set up the server
