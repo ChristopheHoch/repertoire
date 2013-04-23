@@ -1,0 +1,7 @@
+body {
+  background: url(/img/cream_dust.png) repeat 0 0;
+}
+
+a.active {
+  font-weight: bold;
+}
