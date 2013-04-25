@@ -5,7 +5,9 @@
 var express = require('express')
   , http = require('http')
   , path = require('path')
-  , mongoose = require('mongoose');
+  , mongoose = require('mongoose')
+  , passport = require('passport')
+  , LocalStrategy = require('passport-local').Strategy;
 
 /**
  * Set up the database conection
@@ -23,12 +25,49 @@ app.configure(function(){
   app.use(express.logger('dev'));
   app.use(express.bodyParser());
   app.use(express.methodOverride());
+  app.use(express.session({ secret: 'Le chat est dans la boite.' }));
+  app.use(passport.initialize());
+  app.use(passport.session());
   app.use(app.router);
   app.use(express.static(path.join(__dirname, 'public')));
 });
 
 app.configure('development', function(){
   app.use(express.errorHandler());
+});
+
+/**
+ * Set up passport
+ */
+passport.use(new LocalStrategy(
+  function(email, password, done) {
+    UserModel.findOne({ email: email }, function (err, user) {
+      if (err) { 
+        console.log('Error while finding user ' + email + '.');
+        return done(err); 
+      }
+      if (!user) {
+        console.log('User ' + email + ' not found.');
+        return done(null, false, { message: 'Incorrect username.' });
+      }
+      if (!user.validPassword(password)) {
+        console.log('Password incorrect for user ' + email + '.');
+        return done(null, false, { message: 'Incorrect password.' });
+      }
+      console.log('User ' + email + 'successfully logged in.');
+      return done(null, user);
+    });
+  }
+));
+
+passport.serializeUser(function(user, done) {
+  done(null, user.id);
+});
+
+passport.deserializeUser(function(id, done) {
+  UserModel.findById(id, function(err, user) {
+    done(err, user);
+  });
 });
 
 /**
@@ -114,7 +153,9 @@ app.delete('/users/:id', function (req, res){
  */
 var Schema = mongoose.Schema;  
 
-var UserSchema = new Schema({  
+var UserSchema = new Schema({
+    email: String,
+    password: String,
     first_name: String,  
     last_name: String
 });
