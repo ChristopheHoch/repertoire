@@ -25,6 +25,7 @@ app.configure(function(){
   app.use(express.logger('dev'));
   app.use(express.bodyParser());
   app.use(express.methodOverride());
+  app.use(express.cookieParser()); 
   app.use(express.session({ secret: 'Le chat est dans la boite.' }));
   app.use(passport.initialize());
   app.use(passport.session());
@@ -39,7 +40,10 @@ app.configure('development', function(){
 /**
  * Set up passport
  */
-passport.use(new LocalStrategy(
+passport.use(new LocalStrategy({
+    usernameField: 'email',
+    passwordField: 'password'
+  },
   function(email, password, done) {
     UserModel.findOne({ email: email }, function (err, user) {
       if (err) { 
@@ -73,80 +77,81 @@ passport.deserializeUser(function(id, done) {
 /**
  * Set up the routes
  */
-// var users = require('./routes/users');
-
-app.get('/api', function (req, res) {
-  res.send('Sterfly API is running');
-});
-
-app.get('/users', function (req, res) {
-  res.contentType('application/json');
-  return UserModel.find(function (err, users) {
-    if (!err) {
-        console.log('Found users: ' + JSON.stringify(users));
-        return res.send({users: users});
-    } else {
-      return console.log('Error: Users not found: ' + err);
-    }
+app.post('/login', function (req, res) {
+  passport.authenticate('local', { failureRedirect: '/login', failureFlash: true },
+  function(req, res) {
+    res.redirect('/');
   });
 });
 
-app.post('/users', function (req, res){
-  var user;
-  console.log("POST: ");
-  console.log(req.body);
-  user = new UserModel({
-    first_name: req.body.first_name,
-    last_name: req.body.last_name
-  });
-  user.save(function (err) {
-    if (!err) {
-      return console.log("created");
-    } else {
-      return console.log(err);
-    }
-  });
-  return res.send(user);
-});
+// app.get('/users', function (req, res) {
+//   res.contentType('application/json');
+//   return UserModel.find(function (err, users) {
+//     if (!err) {
+//         console.log('Found users: ' + JSON.stringify(users));
+//         return res.send({users: users});
+//     } else {
+//       return console.log('Error: Users not found: ' + err);
+//     }
+//   });
+// });
 
-app.get('/users/:id', function (req, res){
-  return UserModel.findById(req.params.id, function (err, user) {
-    if (!err) {
-      console.log('Found user: ' + JSON.stringify(user));
-      return res.send({user: user});
-    } else {
-      return console.log('Error: User not found: ' + err);
-    }
-  });
-});
+// app.post('/users', function (req, res){
+//   var user;
+//   console.log("POST: ");
+//   console.log(req.body);
+//   user = new UserModel({
+//     first_name: req.body.first_name,
+//     last_name: req.body.last_name
+//   });
+//   user.save(function (err) {
+//     if (!err) {
+//       return console.log("created");
+//     } else {
+//       return console.log(err);
+//     }
+//   });
+//   return res.send(user);
+// });
 
-app.put('/users/:id', function (req, res){
-  return UserModel.findById(req.params.id, function (err, user) {
-    user.first_name = req.body.first_name;
-    user.last_name = req.body.last_name;
-    return user.save(function (err) {
-      if (!err) {
-        console.log("updated");
-      } else {
-        console.log(err);
-      }
-      return res.send(user);
-    });
-  });
-});
+// app.get('/users/:id', function (req, res){
+//   return UserModel.findById(req.params.id, function (err, user) {
+//     if (!err) {
+//       console.log('Found user: ' + JSON.stringify(user));
+//       return res.send({user: user});
+//     } else {
+//       return console.log('Error: User not found: ' + err);
+//     }
+//   });
+// });
 
-app.delete('/users/:id', function (req, res){
-  return UserModel.findById(req.params.id, function (err, user) {
-    return user.remove(function (err) {
-      if (!err) {
-        console.log("removed");
-        return res.send('');
-      } else {
-        console.log(err);
-      }
-    });
-  });
-});
+// app.put('/users/:id', function (req, res){
+//   return UserModel.findById(req.params.id, function (err, user) {
+//     user.first_name = req.body.first_name;
+//     user.last_name = req.body.last_name;
+//     return user.save(function (err) {
+//       if (!err) {
+//         console.log("updated");
+//       } else {
+//         console.log(err);
+//       }
+//       return res.send(user);
+//     });
+//   });
+// });
+
+// app.delete('/users/:id', function (req, res){
+//   return UserModel.findById(req.params.id, function (err, user) {
+//     return user.remove(function (err) {
+//       if (!err) {
+//         console.log("removed");
+//         return res.send('');
+//       } else {
+//         console.log(err);
+//       }
+//     });
+//   });
+// });
 
 /**
  * Set up the Schema

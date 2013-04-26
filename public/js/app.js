@@ -37,11 +37,26 @@ App.UserRoute = Ember.Route.extend({
 // Model
 App.User = DS.Model.extend({
   _id: DS.attr('string'),
+  email: DS.attr('string'),
   firstName: DS.attr('string'),
   lastName: DS.attr('string')
 });
 
 // Controler
+App.ApplicationController = Ember.Controller.extend({
+  isAuthenticate: false,
+  firstName: 'Christophe',
+  lastName: 'Christophe',
+
+  signin: function() {
+    this.set('isAuthenticate', true)
+  },
+
+  signout: function() {
+    this.set('isAuthenticate', false)
+  }
+});
+
 App.UserController = Ember.ObjectController.extend({
   isEditing: false,
 
