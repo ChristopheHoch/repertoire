@@ -78,41 +78,41 @@ passport.deserializeUser(function(id, done) {
  * Set up the routes
  */
 app.post('/login', function (req, res) {
+  console.log("Login user: " + req.body.email);
   passport.authenticate('local', { failureRedirect: '/login', failureFlash: true },
   function(req, res) {
     res.redirect('/');
   });
 });
 
-// app.get('/users', function (req, res) {
-//   res.contentType('application/json');
-//   return UserModel.find(function (err, users) {
-//     if (!err) {
-//         console.log('Found users: ' + JSON.stringify(users));
-//         return res.send({users: users});
-//     } else {
-//       return console.log('Error: Users not found: ' + err);
-//     }
-//   });
-// });
+app.get('/users', function (req, res) {
+  res.contentType('application/json');
+  return UserModel.find(function (err, users) {
+    if (!err) {
+        console.log('Found users: ' + JSON.stringify(users));
+        return res.send({users: users});
+    } else {
+      return console.log('Error: Users not found: ' + err);
+    }
+  });
+});
 
-// app.post('/users', function (req, res){
-//   var user;
-//   console.log("POST: ");
-//   console.log(req.body);
-//   user = new UserModel({
-//     first_name: req.body.first_name,
-//     last_name: req.body.last_name
-//   });
-//   user.save(function (err) {
-//     if (!err) {
-//       return console.log("created");
-//     } else {
-//       return console.log(err);
-//     }
-//   });
-//   return res.send(user);
-// });
+app.post('/signup', function (req, res){
+  var user;
+  console.log("Sign up user: " + req.body.email);
+  user = new UserModel({
+    email: req.body.email,
+    password: req.body.password
+  });
+  user.save(function (err) {
+    if (!err) {
+      return console.log("created");
+    } else {
+      return console.log(err);
+    }
+  });
+  return res.send(user);
+});
 
 // app.get('/users/:id', function (req, res){
 //   return UserModel.findById(req.params.id, function (err, user) {
@@ -159,10 +159,22 @@ app.post('/login', function (req, res) {
 var Schema = mongoose.Schema;  
 
 var UserSchema = new Schema({
-    email: String,
-    password: String,
-    first_name: String,  
-    last_name: String
+  email: String,
+  password: String,
+  first_name: String,  
+  last_name: String,
+  contacts: [ContactSchema]
+});
+
+var ContactSchema = new Schema({
+  first_name: String,
+  last_name: String,
+  email: String,
+  mobile_phone: String,
+  address: String,
+  postcode: String,
+  city: String,
+  country: String
 });
 
 var UserModel = mongoose.model('User', UserSchema);  
