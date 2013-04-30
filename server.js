@@ -77,11 +77,11 @@ passport.deserializeUser(function(id, done) {
 /**
  * Set up the routes
  */
-app.post('/login', function (req, res) {
-  console.log("Login user: " + req.body.email);
+app.post('/signin', function (req, res) {
+  console.log("Signing in user " + req.body.email);
   passport.authenticate('local', { failureRedirect: '/login', failureFlash: true },
   function(req, res) {
-    res.redirect('/');
+    res.send({users: req.user});
   });
 });
 
