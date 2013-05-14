@@ -5,9 +5,7 @@
 var express = require('express')
   , http = require('http')
   , path = require('path')
-  , mongoose = require('mongoose')
-  , passport = require('passport')
-  , LocalStrategy = require('passport-local').Strategy;
+  , mongoose = require('mongoose');
 
 /**
  * Set up the database conection
@@ -27,8 +25,6 @@ app.configure(function(){
   app.use(express.methodOverride());
   app.use(express.cookieParser()); 
   app.use(express.session({ secret: 'Le chat est dans la boite.' }));
-  app.use(passport.initialize());
-  app.use(passport.session());
   app.use(app.router);
   app.use(express.static(path.join(__dirname, 'public')));
 });
@@ -38,120 +34,62 @@ app.configure('development', function(){
 });
 
 /**
- * Set up passport
- */
-passport.use(new LocalStrategy({
-    usernameField: 'email',
-    passwordField: 'password'
-  },
-  function(email, password, done) {
-    UserModel.findOne({ email: email }, function (err, user) {
-      if (err) { 
-        console.log('Error while finding user ' + email + '.');
-        return done(err); 
-      }
-      if (!user) {
-        console.log('User ' + email + ' not found.');
-        return done(null, false, { message: 'Incorrect username.' });
-      }
-      if (!user.validPassword(password)) {
-        console.log('Password incorrect for user ' + email + '.');
-        return done(null, false, { message: 'Incorrect password.' });
-      }
-      console.log('User ' + email + 'successfully logged in.');
-      return done(null, user);
-    });
-  }
-));
-
-passport.serializeUser(function(user, done) {
-  done(null, user.id);
-});
-
-passport.deserializeUser(function(id, done) {
-  UserModel.findById(id, function(err, user) {
-    done(err, user);
-  });
-});
-
-/**
  * Set up the routes
  */
-app.post('/login', function (req, res) {
-  console.log("Login user: " + req.body.email);
-  passport.authenticate('local', { failureRedirect: '/login', failureFlash: true },
-  function(req, res) {
-    res.redirect('/');
-  });
-});
 
-app.get('/users', function (req, res) {
-  res.contentType('application/json');
-  return UserModel.find(function (err, users) {
-    if (!err) {
-        console.log('Found users: ' + JSON.stringify(users));
-        return res.send({users: users});
-    } else {
-      return console.log('Error: Users not found: ' + err);
-    }
-  });
-});
+ app.get('/users/:id', function (req, res){
+   return UserModel.findById(req.params.id, function (err, user) {
+     if (!err) {
+       console.log('Found user: ' + JSON.stringify(user));
+       return res.send({user: user});
+     } else {
+       return console.log('Error: User not found: ' + err);
+     }
+   });
+ });
 
-app.post('/signup', function (req, res){
-  var user;
-  console.log("Sign up user: " + req.body.email);
-  user = new UserModel({
-    email: req.body.email,
-    password: req.body.password
-  });
-  user.save(function (err) {
-    if (!err) {
-      return console.log("created");
-    } else {
-      return console.log(err);
-    }
-  });
-  return res.send(user);
-});
+ app.post('/users', function (req, res){
+   return UserModel.findById(req.params.id, function (err, user) {
+     user.first_name = req.body.first_name;
+     user.last_name = req.body.last_name;
+     return user.save(function (err) {
+       if (!err) {
+         console.log("User " + req.params.id + " updated");
+       } else {
+         console.log(err);
+       }
+       return res.send(user);
+     });
+   });
+ });
 
-// app.get('/users/:id', function (req, res){
-//   return UserModel.findById(req.params.id, function (err, user) {
-//     if (!err) {
-//       console.log('Found user: ' + JSON.stringify(user));
-//       return res.send({user: user});
-//     } else {
-//       return console.log('Error: User not found: ' + err);
-//     }
-//   });
-// });
+ app.put('/users/:id', function (req, res){
+   return UserModel.findById(req.params.id, function (err, user) {
+     user.first_name = req.body.first_name;
+     user.last_name = req.body.last_name;
+     return user.save(function (err) {
+       if (!err) {
+         console.log("User " + req.params.id + " updated");
+       } else {
+         console.log(err);
+       }
+       return res.send(user);
+     });
+   });
+ });
 
-// app.put('/users/:id', function (req, res){
-//   return UserModel.findById(req.params.id, function (err, user) {
-//     user.first_name = req.body.first_name;
-//     user.last_name = req.body.last_name;
-//     return user.save(function (err) {
-//       if (!err) {
-//         console.log("updated");
-//       } else {
-//         console.log(err);
-//       }
-//       return res.send(user);
-//     });
-//   });
-// });
-
-// app.delete('/users/:id', function (req, res){
-//   return UserModel.findById(req.params.id, function (err, user) {
-//     return user.remove(function (err) {
-//       if (!err) {
-//         console.log("removed");
-//         return res.send('');
-//       } else {
-//         console.log(err);
-//       }
-//     });
-//   });
-// });
+ app.delete('/users/:id', function (req, res){
+   return UserModel.findById(req.params.id, function (err, user) {
+     return user.remove(function (err) {
+       if (!err) {
+         console.log("User " + req.params.id + " removed");
+         return res.send('');
+       } else {
+         console.log(err);
+       }
+     });
+   });
+ });
 
 /**
  * Set up the Schema
@@ -159,10 +97,9 @@ app.post('/signup', function (req, res){
 var Schema = mongoose.Schema;  
 
 var UserSchema = new Schema({
-  email: String,
-  password: String,
   first_name: String,  
   last_name: String,
+  email: String,
   contacts: [ContactSchema]
 });
 
