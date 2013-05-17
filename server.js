@@ -12,6 +12,9 @@ var express = require('express')
  */
 mongoose.connect(process.env.MONGO_URL);
 
+// Import the models
+// var users = require('./models/User')(config, mongoose);
+
 /**
  * Set up the server
  */
@@ -52,6 +55,7 @@ app.configure('development', function(){
    return UserModel.findById(req.params.id, function (err, user) {
      user.first_name = req.body.first_name;
      user.last_name = req.body.last_name;
+     user.email = req.body.email;
      return user.save(function (err) {
        if (!err) {
          console.log("User " + req.params.id + " updated");
@@ -67,6 +71,7 @@ app.configure('development', function(){
    return UserModel.findById(req.params.id, function (err, user) {
      user.first_name = req.body.first_name;
      user.last_name = req.body.last_name;
+     user.email = req.body.email;
      return user.save(function (err) {
        if (!err) {
          console.log("User " + req.params.id + " updated");
@@ -100,19 +105,19 @@ var UserSchema = new Schema({
   first_name: String,  
   last_name: String,
   email: String,
-  contacts: [ContactSchema]
+//  contacts: [ContactSchema]
 });
 
-var ContactSchema = new Schema({
-  first_name: String,
-  last_name: String,
-  email: String,
-  mobile_phone: String,
-  address: String,
-  postcode: String,
-  city: String,
-  country: String
-});
+//var ContactSchema = new Schema({
+//  first_name: String,
+//  last_name: String,
+//  email: String,
+//  mobile_phone: String,
+//  address: String,
+//  postcode: String,
+//  city: String,
+//  country: String
+//});
 
 var UserModel = mongoose.model('User', UserSchema);  
 
