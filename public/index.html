@@ -1,120 +1,101 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Repertoire</title>
-    <link href="css/lib/bootstrap.min.css" rel="stylesheet">
-    <link href="css/lib/bootstrap-responsive.min.css" rel="stylesheet">
-    <link href="css/lib/font-awesome.min.css" rel="stylesheet">
-    <link href="css/app.css" rel="stylesheet">
-  </head>
-  <body>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+<!--		<meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+		<title>Repertoire</title>
+		<link href="css/app.css" rel="stylesheet">
+		<link href="css/bootstrap.min.css" rel="stylesheet">
+		
+	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!--[if lt IE 9]>
+		<script src="js/html5shiv.js"></script>
+		<script src="js/respond.min.js"></script>
+	<![endif]-->
+		<script src="js/libs/modernizr-2.6.2.min.js"></script>
+	</head>
+	<body>
   
-    <script type="text/x-handlebars" data-template-name="application">
-      {{render navbar}}
-      <div class="container">
-        {{outlet}}
-      </div>  
-    </script>
+		<script type="text/x-handlebars" data-template-name="application">
+		<div class="navbar navbar-default navbar-static-top">
+			<div class="container">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="/">Cloud Repertoire</a>
+				</div>
+				<div class="navbar-collapse collapse">
+					<ul class="nav navbar-nav">
+						<li>{{#linkTo 'contacts'}}Contacts{{/linkTo}}</li>
+					</ul>
+					<ul class="nav navbar-nav navbar-right">
+						<li>{{#linkTo 'signin'}}
+							Sign in <span class="glyphicon glyphicon-log-in"></span>
+						{{/linkTo}}</li>
+						<li>{{#linkTo 'signout'}}
+							Sign out <span class="glyphicon glyphicon-log-out"></span>
+						{{/linkTo}}</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		
+		<div class="container">
 
-    <script type="text/x-handlebars" data-template-name="navbar">
-      <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="navbar-inner">
-          <div class="container">
-          {{#linkTo index class="brand"}}Repertoire{{/linkTo}}
-          <!--div class="nav-collapse collapse"-->
-            {{#if isAuthenticate}}
-            <ul class="nav">
-              <li><a href="#"><i class="icon-book"></i> Contacts</a></li>
-              <li><a href="#"><i class="icon-plus"></i> New</a></li>
-            </ul>
-            <div class="navbar-text pull-right">
-              <ul class="nav">
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                  {{firstName}} {{lastName}} <b class="caret"></b>
-                </a>
-                <ul class="dropdown-menu">
-                  <li><a href="#"><i class="icon-user"></i> View Profile</a></li>
-                  <li><a href="#"><i class="icon-edit"></i> Edit Profile</a></li>
-                  <li class="divider"></li>
-                  <li><a href="#" {{action 'signout'}}><i class="icon-signout"></i> Sign out</a></li>
-                </ul>
-              </li>
-              </ul>
-            </div>
-            {{else}}
-            <form class="navbar-form pull-right">
-              {{input type="email" placeholder="Email" value=email}}
-              {{input type="password" placeholder="Password" value=password}}
-              <button type="submit" class="btn btn-primary" {{action 'signin'}}>Sign in</button>
-            </form>
-            {{/if}}
-          </div>
-          <!--/div-->
-        </div>
-      </div>
-    </script>
+			{{outlet}}
+		
+		</div>
+		</script>
 
-    <script type="text/x-handlebars" data-template-name="index">
-    {{#if controllers.navbar.isAuthenticate}}
-      <h2>Congratulation, you are authenticate!</h2>
-    {{else}}
-      <div class="row-fluid">
-        <div class="span9">
-          <h2>Welcome to the Cloud Repertoire</h2>
-        </div>
-        <div class="span3">
-          {{render signup}}
-        </div>
-      </div>
-    {{/if}}  
-    </script>
+		<script type="text/x-handlebars" data-template-name="signin">
+			{{#if infoMessage}}
+			<div class="alert alert-success">{{infoMessage}}</div>
+			{{/if}}
+			{{#if warnMessage}}
+			<div class="alert alert-warning">{{warnMessage}}</div>
+			{{/if}}
+			{{#if errorMessage}}
+			<div class="alert alert-danger">{{errorMessage}}</div>
+			{{/if}}
+			<form {{action signin on="submit"}} class="form-signin">
+				<h2 class="form-signin-heading">Sign In</h2>
+				{{input value=email type="email" placeholder="Email" class="form-control"}}
+				{{input value=password type="password" placeholder="Password" class="form-control"}}
+				{{input type="submit" value="Sign in" class="btn btn-lg btn-primary btn-block"}}
+			</form>
+		</script>
+		
+		<script type="text/x-handlebars" data-template-name="contacts">
+			<h2>Contacts</h2>
+			<ul>
+				{{#each model}}
+				<li>
+					{{firstName}} {{lastName}} - {{email}}
+				</li>
+				{{else}}
+					<li><label>You have no contact...</label></li>
+				{{/each}}
+			</ul>
+		</script>
 
-    <script type="text/x-handlebars" data-template-name="signup">
-      <h2>Register now {{ email }} {{ password }} !</h2>
-      {{input type="email" placeholder="Email" value=email}}
-      {{input type="password" placeholder="Password" value=password}}
-      <button type="submit" class="btn btn-primary" {{action 'signup'}}>Sign on</button>
-    </script>
+		<script type="text/x-handlebars" data-template-name="index">
+		</script>
       
-    <!--script type="text/x-handlebars" data-template-name="users">
-      <div class="row-fluid">
-        <div class="span3">
-          <ul class="nav nav-pills nav-stacked">
-          {{#each user in model}}
-            <li>{{#linkTo 'user' user}} {{user.firstName}} {{user.lastName}} {{/linkTo}}</li>
-          {{/each}}
-          </ul>
-        </div>
-        <div class="span9">
-          {{outlet}}
-        </div>
-      </div>
-    </script-->
-
-    <!--script type="text/x-handlebars" data-template-name="user">
-      <h2>{{firstName}} {{lastName}}</h2>
-      {{#if isEditing}}
-        {{partial 'user/edit'}}
-        <button class="btn btn-warning" {{action 'done'}}>Cancel</button>
-        <button class="btn btn-primary" {{action 'done'}}>Done</button>
-        <button class="btn btn-danger" {{action 'done'}}>Delete Account</button>
-      {{else}}
-        <button class="btn" {{action 'edit'}}>Edit</button>
-      {{/if}}
-    </script-->
-
-    <!--script type="text/x-handlebars" data-template-name="user/_edit">
-      <p><label for="firstName">First name: </label>{{input value=firstName}}</p>
-      <p><label for="lastName">Last name: </label>{{input value=lastName}}</p>
-    </script-->
-      
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
-    <script src="js/lib/handlebars-1.0.0-rc.3.js"></script>
-    <script src="js/lib/ember-latest.js"></script>
-    <script src="js/lib/bootstrap.min.js"></script>
-    <script src="js/app.js"></script>
-  </body>
+		<script src="js/libs/jquery-1.10.2.js"></script>
+		<script src="js/libs/bootstrap.min.js"></script>
+		<script src="js/libs/handlebars-1.0.0.js"></script>
+		<script src="js/libs/ember-1.0.0-rc.7.js"></script>
+		
+		<script src="js/application.js"></script>
+		<script src="js/router.js"></script>
+<!--		<script src="js/models/store.js"></script>-->
+<!--		<script src="js/models/contact.js"></script>-->
+		<script src="js/controllers/signin.js"></script>
+		<script src="js/controllers/signout.js"></script>
+<!--		<script src="js/controllers/contacts.js"></script>-->
+<!--		<script src="js/controllers/contact.js"></script>-->
+	</body>
 </html>

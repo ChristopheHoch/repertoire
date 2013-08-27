@@ -1,129 +1,255 @@
+
 /**
  * Module dependencies.
  */
 
 var express = require('express')
+  , mongoose = require('mongoose')
+  , uuid = require('node-uuid')
+  , config = require('./config')
   , http = require('http')
   , path = require('path')
-  , mongoose = require('mongoose');
+  , app
+  , db;
 
-/**
- * Set up the database conection
- */
-mongoose.connect(process.env.MONGO_URL);
+app = express();
 
-// Import the models
-// var users = require('./models/User')(config, mongoose);
+// all environments
+app.set('port', process.env.PORT || 3000);
+app.use(express.favicon());
+app.use(express.logger('dev'));
+app.use(express.bodyParser());
+app.use(express.methodOverride());
+app.use(app.router);
+app.use(express.static(path.join(__dirname, 'public')));
 
-/**
- * Set up the server
- */
-var app = express();
+// connection to MongoDB
+mongoose.connect(config.creds.mongoose_auth);
 
-app.configure(function(){
-  app.set('port', process.env.PORT || 3000);
-  app.use(express.favicon());
-  app.use(express.logger('dev'));
-  app.use(express.bodyParser());
-  app.use(express.methodOverride());
-  app.use(express.cookieParser()); 
-  app.use(express.session({ secret: 'Le chat est dans la boite.' }));
-  app.use(app.router);
-  app.use(express.static(path.join(__dirname, 'public')));
+db = mongoose.connection;
+db.on('error', console.error.bind(console, 'Connection error:'));
+db.once('open', function callback() {
+	console.log("Connection openned...");
+
+	var UserSchema = mongoose.Schema({
+		email: String,
+		password: String
+	});
+	var User = mongoose.model('User', UserSchema);
+	
+	var SessionSchema = mongoose.Schema({
+		token: String,
+		account_id: String
+	});
+	var Session = mongoose.model('Session', SessionSchema);
+	
+	var ContactSchema = mongoose.Schema({
+		first_name: String,
+		last_name: String,
+		email: String
+	});
+	var Contact = mongoose.model('Contact', ContactSchema);
+	
+	/**
+	 * ROUTE: Session
+	 */
+	app.post('/sign_in', function(req, res) {
+		var body = req.body
+		  , email = body.email
+		  , password = body.password;
+		
+		console.log('Request body: ' + JSON.stringify(body));
+		User.findOne({email: email, password: password}, function (err, user) {
+			if (!err && user != undefined) {
+				var token = uuid.v4();
+				
+				var session = new Session({token: token, account_id: user.id});
+				session.save(function (err) {
+					if (!err) {
+						console.log('Session created!');
+						res.send({
+							success: true,
+							token: token,
+							account_id: user.id
+						});
+					} else {
+						console.log('Session not created!');
+						res.send({
+							success: false,
+							message: 'Something wrong happened!'
+						});
+					}
+				});
+
+			} else {
+				console.log('Wrong email/password!');
+				res.send({
+					success: false,
+					message: 'Invalid email/password'
+				});
+			}
+		});
+		
+	});
+	
+	app.post('/sign_out', function(req, res) {
+		var body = req.body
+		  , token = body.token
+		  , account_id = body.account_id;
+
+		return Session.findOne({token: token, account_id: account_id}, function (err, session) {
+			if (!err && session != undefined) {
+				return session.remove(function (err) {
+					if (!err) {
+						console.log("Session deleted!");
+						return res.send(200);
+					} else {
+						console.log('Error: Session not deleted: ' + err);
+						console.log(err);
+						return res.send(200);
+					}
+				});
+			} else {
+				console.log('Error: Session not found: ' + err);
+				console.log(err);
+				return res.send(200);
+			}
+		});
+		
+	});
+	
+	app.post('/sign_up', function(req, res) {
+		var body = req.body
+		  , email = body.email
+		  , password = body.password;
+		
+		User.findOne({ email: email }, function(err, user) {
+			if (!err) {
+				if (user == undefined) {
+					
+					var user = new User({ email: email, password: password })
+					user.save(function(err) {
+						if (!err) {
+							console.log("User created!");
+							res.send(user);
+						} else {
+							console.log('Error: User not created: ' + err);
+							res.send(500, { error: 'Something wrong happened'});
+						}
+					});
+					
+				} else {
+					console.log('User already signed up.');
+					res.send(403, { error: 'This email is already registered!'});
+				}
+			} else {
+				console.log('Error while looking for users: ' + err);
+			}
+		});
+		
+	});
+	
+	function validTokenProvided(req, res, callback) {
+		var token = req.param('token')
+		  , account_id = req.param('account_id');
+		console.log('Request token/accountId: ' + token + '/' + account_id);
+		
+		Session.findOne({token: token, account_id: account_id}, function (err, session) {
+			if (!err && session != undefined) {
+				console.log('Correct token!');
+				callback(res)
+//				return true;
+			} else {
+				console.log('Wrong token!');
+				res.send(401, { error: 'Invalid token!'});
+//				return false;
+			}
+		});
+	}
+	
+	/**
+	 * ROUTE: Contacts
+	 */
+	app.get('/contacts', function (req, res) {
+		
+		validTokenProvided(req, res, function(res) {
+			console.log('Token validated!');
+			Contact.find(function (err, contacts) {
+				if (!err) {
+					console.log('Found contacts: ' + JSON.stringify(contacts));
+					return res.send(contacts);
+				} else {
+					return console.log('Error: Contacts not found: ' + err);
+				}
+			});
+		});
+		
+//		if(validTokenProvided(req, res)) {
+//			console.log('Token validated!');
+//			Contact.find(function (err, contacts) {
+//				if (!err) {
+//					console.log('Found contacts: ' + JSON.stringify(contacts));
+//					return res.send({contacts: contacts});
+//				} else {
+//					return console.log('Error: Contacts not found: ' + err);
+//				}
+//			});
+//		} else {
+//			console.log('Token not validated!');
+//		}
+	});
+	
+	app.post('/contacts', function (req, res) {
+		var contact = new Contact(req.body.todo);
+		contact.save(function (err) {
+			if (!err) {
+				return console.log("Contact created!");
+			} else {
+				console.log('Error: Contact not created: ' + err);
+				return console.log(err);
+			}
+		});
+		return res.send({contact: contact});
+	});
+	
+	app.put('/contacts/:id', function (req, res) {
+		return Contact.findById(req.params.id, function (err, contact) {
+			contact.first_name = req.body.contact.first_name;
+			contact.last_name = req.body.contact.last_name;
+			contact.email = req.body.contact.email;
+			return contact.save(function (err) {
+				if (!err) {
+					console.log("Contact updated!");
+				} else {
+					console.log('Error: Contact not updated: ' + err);
+					console.log(err);
+				}
+				return res.send({contact: contact});
+			});
+		});
+	});
+	
+	app.delete('/contacts/:id', function (req, res) {
+		return Contact.findById(req.params.id, function (err, contact) {
+			return contact.remove(function (err) {
+				if (!err) {
+					console.log("Contact deleted!");
+					return res.send('');
+				} else {
+					console.log('Error: Contact not deleted: ' + err);
+					console.log(err);
+				}
+			});
+		});
+	});
+	
 });
 
-app.configure('development', function(){
-  app.use(express.errorHandler());
-});
+// development only
+if ('development' == app.get('env')) {
+	app.use(express.errorHandler());
+}
 
-/**
- * Set up the routes
- */
-
- app.get('/users/:id', function (req, res){
-   return UserModel.findById(req.params.id, function (err, user) {
-     if (!err) {
-       console.log('Found user: ' + JSON.stringify(user));
-       return res.send({user: user});
-     } else {
-       return console.log('Error: User not found: ' + err);
-     }
-   });
- });
-
- app.post('/users', function (req, res){
-   return UserModel.findById(req.params.id, function (err, user) {
-     user.first_name = req.body.first_name;
-     user.last_name = req.body.last_name;
-     user.email = req.body.email;
-     return user.save(function (err) {
-       if (!err) {
-         console.log("User " + req.params.id + " updated");
-       } else {
-         console.log(err);
-       }
-       return res.send(user);
-     });
-   });
- });
-
- app.put('/users/:id', function (req, res){
-   return UserModel.findById(req.params.id, function (err, user) {
-     user.first_name = req.body.first_name;
-     user.last_name = req.body.last_name;
-     user.email = req.body.email;
-     return user.save(function (err) {
-       if (!err) {
-         console.log("User " + req.params.id + " updated");
-       } else {
-         console.log(err);
-       }
-       return res.send(user);
-     });
-   });
- });
-
- app.delete('/users/:id', function (req, res){
-   return UserModel.findById(req.params.id, function (err, user) {
-     return user.remove(function (err) {
-       if (!err) {
-         console.log("User " + req.params.id + " removed");
-         return res.send('');
-       } else {
-         console.log(err);
-       }
-     });
-   });
- });
-
-/**
- * Set up the Schema
- */
-var Schema = mongoose.Schema;  
-
-var UserSchema = new Schema({
-  first_name: String,  
-  last_name: String,
-  email: String,
-//  contacts: [ContactSchema]
-});
-
-//var ContactSchema = new Schema({
-//  first_name: String,
-//  last_name: String,
-//  email: String,
-//  mobile_phone: String,
-//  address: String,
-//  postcode: String,
-//  city: String,
-//  country: String
-//});
-
-var UserModel = mongoose.model('User', UserSchema);  
-
-/**
- * Run the server
- */
 http.createServer(app).listen(app.get('port'), function(){
-  console.log("Express server listening on port " + app.get('port'));
+	console.log('Express server listening on port ' + app.get('port'));
 });
