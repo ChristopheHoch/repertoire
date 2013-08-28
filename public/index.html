@@ -32,6 +32,9 @@
 						<li>{{#linkTo 'contacts'}}Contacts{{/linkTo}}</li>
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
+						<li>{{#linkTo 'signup'}}
+							Sign up <span class="glyphicon glyphicon-pencil"></span>
+						{{/linkTo}}</li>
 						<li>{{#linkTo 'signin'}}
 							Sign in <span class="glyphicon glyphicon-log-in"></span>
 						{{/linkTo}}</li>
@@ -62,6 +65,21 @@
 				{{input value=email type="email" placeholder="Email" class="form-control"}}
 				{{input value=password type="password" placeholder="Password" class="form-control"}}
 				{{input type="submit" value="Sign in" class="btn btn-lg btn-primary btn-block"}}
+			</form>
+		</script>
+		
+		<script type="text/x-handlebars" data-template-name="signup">
+			{{#if warnMessage}}
+			<div class="alert alert-warning">{{warnMessage}}</div>
+			{{/if}}
+			{{#if errorMessage}}
+			<div class="alert alert-danger">{{errorMessage}}</div>
+			{{/if}}
+			<form {{action signin on="submit"}} class="form-signin">
+				<h2 class="form-signin-heading">Sign Up</h2>
+				{{input value=email type="email" placeholder="Email" class="form-control"}}
+				{{input value=password type="password" placeholder="Password" class="form-control"}}
+				{{input type="submit" value="Sign up" class="btn btn-lg btn-primary btn-block"}}
 			</form>
 		</script>
 		
@@ -118,6 +136,7 @@
 		</script>
 
 		<script type="text/x-handlebars" data-template-name="index">
+			<h2>Welcome!</h2>
 		</script>
       
 		<script src="js/libs/jquery-1.10.2.js"></script>
@@ -129,8 +148,10 @@
 		<script src="js/router.js"></script>
 <!--		<script src="js/models/store.js"></script>-->
 <!--		<script src="js/models/contact.js"></script>-->
+		<script src="js/controllers/application.js"></script>
 		<script src="js/controllers/signin.js"></script>
 		<script src="js/controllers/signout.js"></script>
+		<script src="js/controllers/signup.js"></script>
 <!--		<script src="js/controllers/contacts.js"></script>-->
 		<script src="js/controllers/contact.js"></script>
 	</body>
