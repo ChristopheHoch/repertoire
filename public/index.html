@@ -51,9 +51,6 @@
 		</script>
 
 		<script type="text/x-handlebars" data-template-name="signin">
-			{{#if infoMessage}}
-			<div class="alert alert-success">{{infoMessage}}</div>
-			{{/if}}
 			{{#if warnMessage}}
 			<div class="alert alert-warning">{{warnMessage}}</div>
 			{{/if}}
@@ -70,15 +67,54 @@
 		
 		<script type="text/x-handlebars" data-template-name="contacts">
 			<h2>Contacts</h2>
-			<ul>
-				{{#each model}}
-				<li>
-					{{firstName}} {{lastName}} - {{email}}
-				</li>
-				{{else}}
-					<li><label>You have no contact...</label></li>
-				{{/each}}
-			</ul>
+			<div class="table-responsive">
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th>First name</th>
+							<th>Last name</th>
+							<th>Email address</th>
+							<th>
+								<button class="btn btn-success btn-xs">
+									New Contact
+								</button>
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+					{{#each itemController="contact"}}
+						<tr>
+							{{#if isEditing}}
+							<td>{{input value=first_name placeholder="First name" class="form-control"}}</td>
+							<td>{{input value=last_name placeholder="Last name" class="form-control"}}</td>
+							<td>{{input value=email type="email" placeholder="Email address" class="form-control"}}</td>
+							<td>
+								<button {{action 'saveChanges'}} class="btn btn-success">
+									Save Changes
+								</button>
+								<button {{action 'discardChanges'}} class="btn btn-warning">
+									Discard Changes
+								</button>
+							</td>
+							{{else}}
+							<td>{{first_name}}</td>
+							<td>{{last_name}}</td>
+							<td>{{email}}</td>
+							<td>
+								<button {{action 'editContact'}} class="btn btn-primary btn-xs">
+									Edit Contact
+								</button>
+							</td>
+							{{/if}}
+						</tr>
+					{{else}}
+						<tr>
+							<td colspan=4 class="warning">You have no contact...</td>
+						</tr>
+					{{/each}}
+					</tbody>
+				</table>
+			</div>
 		</script>
 
 		<script type="text/x-handlebars" data-template-name="index">
@@ -96,6 +132,6 @@
 		<script src="js/controllers/signin.js"></script>
 		<script src="js/controllers/signout.js"></script>
 <!--		<script src="js/controllers/contacts.js"></script>-->
-<!--		<script src="js/controllers/contact.js"></script>-->
+		<script src="js/controllers/contact.js"></script>
 	</body>
 </html>

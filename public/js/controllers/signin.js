@@ -5,7 +5,7 @@ App.SigninController = Ember.Controller.extend({
 			username: "",
 			password: "",
 			errorMessage: "",
-//			warnMessage: "",
+			warnMessage: "",
 			infoMessage: ""
 		});
 	},

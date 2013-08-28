@@ -1,6 +1,6 @@
 App.SignoutController = Ember.Controller.extend({
 	
-	redirectToSignin: function(transition) {
+	redirectToSignin: function() {
 		App.Session.set('authToken', '');
 		App.Session.set('authAccountId', '');
 		this.transitionToRoute('signin');
@@ -13,14 +13,14 @@ App.SignoutController = Ember.Controller.extend({
 		  , data = { token: token, account_id: account_id };
 		
 		if(!token || !account_id) {
-			redirectToSignin();
+			this.redirectToSignin();
 		}
 
 		Ember.$.post('/sign_out', data).then(function(response) {
 			console.log('Sign out response:');
 			console.log(response);
 			
-			redirectToSignin();
+			self.redirectToSignin();
 
 		});
 	}

@@ -152,8 +152,7 @@ db.once('open', function callback() {
 	function validTokenProvided(req, res, callback) {
 		var token = req.param('token')
 		  , account_id = req.param('account_id');
-		console.log('Request token/accountId: ' + token + '/' + account_id);
-		
+
 		Session.findOne({token: token, account_id: account_id}, function (err, session) {
 			if (!err && session != undefined) {
 				console.log('Correct token!');
@@ -171,74 +170,68 @@ db.once('open', function callback() {
 	 * ROUTE: Contacts
 	 */
 	app.get('/contacts', function (req, res) {
-		
 		validTokenProvided(req, res, function(res) {
-			console.log('Token validated!');
 			Contact.find(function (err, contacts) {
 				if (!err) {
 					console.log('Found contacts: ' + JSON.stringify(contacts));
-					return res.send(contacts);
+					res.send(contacts);
 				} else {
-					return console.log('Error: Contacts not found: ' + err);
+					console.log('Error: Contacts not found: ' + err);
+					res.send(500, 'Impossible to fetch the contacts.');
 				}
 			});
 		});
-		
-//		if(validTokenProvided(req, res)) {
-//			console.log('Token validated!');
-//			Contact.find(function (err, contacts) {
-//				if (!err) {
-//					console.log('Found contacts: ' + JSON.stringify(contacts));
-//					return res.send({contacts: contacts});
-//				} else {
-//					return console.log('Error: Contacts not found: ' + err);
-//				}
-//			});
-//		} else {
-//			console.log('Token not validated!');
-//		}
 	});
 	
 	app.post('/contacts', function (req, res) {
-		var contact = new Contact(req.body.todo);
-		contact.save(function (err) {
-			if (!err) {
-				return console.log("Contact created!");
-			} else {
-				console.log('Error: Contact not created: ' + err);
-				return console.log(err);
-			}
+		validTokenProvided(req, res, function(res) {
+			var contact = new Contact(req.body.todo);
+			contact.save(function (err) {
+				if (!err) {
+					return console.log("Contact created!");
+					res.send(contact);
+				} else {
+					console.log('Error: Contact not created: ' + err);
+					return console.log(err);
+					res.send(500, 'The contact was not created.');
+				}
+			});
 		});
-		return res.send({contact: contact});
 	});
 	
 	app.put('/contacts/:id', function (req, res) {
-		return Contact.findById(req.params.id, function (err, contact) {
-			contact.first_name = req.body.contact.first_name;
-			contact.last_name = req.body.contact.last_name;
-			contact.email = req.body.contact.email;
-			return contact.save(function (err) {
-				if (!err) {
-					console.log("Contact updated!");
-				} else {
-					console.log('Error: Contact not updated: ' + err);
-					console.log(err);
-				}
-				return res.send({contact: contact});
+		validTokenProvided(req, res, function(res) {
+			return Contact.findById(req.params.id, function (err, contact) {
+				contact.first_name = req.body.contact.first_name;
+				contact.last_name = req.body.contact.last_name;
+				contact.email = req.body.contact.email;
+				return contact.save(function (err) {
+					if (!err) {
+						console.log("Contact updated!");
+						res.send(contact);
+					} else {
+						console.log('Error: Contact not updated: ' + err);
+						console.log(err);
+						res.send(500, 'The contact was not updated.');
+					}
+				});
 			});
 		});
 	});
 	
 	app.delete('/contacts/:id', function (req, res) {
-		return Contact.findById(req.params.id, function (err, contact) {
-			return contact.remove(function (err) {
-				if (!err) {
-					console.log("Contact deleted!");
-					return res.send('');
-				} else {
-					console.log('Error: Contact not deleted: ' + err);
-					console.log(err);
-				}
+		validTokenProvided(req, res, function(res) {
+			return Contact.findById(req.params.id, function (err, contact) {
+				return contact.remove(function (err) {
+					if (!err) {
+						console.log("Contact deleted!");
+						res.send(200);
+					} else {
+						console.log('Error: Contact not deleted: ' + err);
+						console.log(err);
+						res.send(500, 'The contact was not deleted.');
+					}
+				});
 			});
 		});
 	});
