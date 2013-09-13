@@ -2,4 +2,4 @@
 exports.creds = {
 	// Your mongo auth uri goes here
 	mongoose_auth: ''
-}
+};

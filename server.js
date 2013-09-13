@@ -3,14 +3,14 @@
  * Module dependencies.
  */
 
-var express = require('express')
-  , mongoose = require('mongoose')
-  , uuid = require('node-uuid')
-  , config = require('./config')
-  , http = require('http')
-  , path = require('path')
-  , app
-  , db;
+var express = require('express'),
+	mongoose = require('mongoose'),
+	uuid = require('node-uuid'),
+	config = require('./config'),
+	http = require('http'),
+	path = require('path'),
+	app,
+	db;
 
 app = express();
 
@@ -54,13 +54,13 @@ db.once('open', function callback() {
 	 * ROUTE: Session
 	 */
 	app.post('/sign_in', function(req, res) {
-		var body = req.body
-		  , email = body.email
-		  , password = body.password;
+		var body = req.body,
+			email = body.email,
+			password = body.password;
 		
 		console.log('Request body: ' + JSON.stringify(body));
 		User.findOne({email: email, password: password}, function (err, user) {
-			if (!err && user != undefined) {
+			if (!err && user !== undefined) {
 				var token = uuid.v4();
 				
 				var session = new Session({token: token, account_id: user.id});
@@ -93,12 +93,12 @@ db.once('open', function callback() {
 	});
 	
 	app.post('/sign_out', function(req, res) {
-		var body = req.body
-		  , token = body.token
-		  , account_id = body.account_id;
+		var body = req.body,
+			token = body.token,
+			account_id = body.account_id;
 
 		return Session.findOne({token: token, account_id: account_id}, function (err, session) {
-			if (!err && session != undefined) {
+			if (!err && session !== undefined) {
 				return session.remove(function (err) {
 					if (!err) {
 						console.log("Session deleted!");
@@ -119,16 +119,16 @@ db.once('open', function callback() {
 	});
 	
 	app.post('/sign_up', function(req, res) {
-		var body = req.body
-		  , email = body.email
-		  , password = body.password;
+		var body = req.body,
+			email = body.email,
+			password = body.password;
 		
 		User.findOne({ email: email }, function(err, user) {
 			if (!err) {
-				if (user == undefined) {
+				if (user ===undefined) {
 					
-					var user = new User({ email: email, password: password })
-					user.save(function(err) {
+					var newUser = new User({ email: email, password: password });
+					newUser.save(function(err) {
 						if (!err) {
 							console.log("User created!");
 							res.send(user);
@@ -150,13 +150,13 @@ db.once('open', function callback() {
 	});
 	
 	function validTokenProvided(req, res, callback) {
-		var token = req.param('token')
-		  , account_id = req.param('account_id');
+		var token = req.param('token'),
+			account_id = req.param('account_id');
 
 		Session.findOne({token: token, account_id: account_id}, function (err, session) {
-			if (!err && session != undefined) {
+			if (!err && session !== undefined) {
 				console.log('Correct token!');
-				callback(res)
+				callback(res);
 //				return true;
 			} else {
 				console.log('Wrong token!');
@@ -188,11 +188,11 @@ db.once('open', function callback() {
 			var contact = new Contact(req.body.todo);
 			contact.save(function (err) {
 				if (!err) {
-					return console.log("Contact created!");
+					console.log("Contact created!");
 					res.send(contact);
 				} else {
 					console.log('Error: Contact not created: ' + err);
-					return console.log(err);
+					console.log(err);
 					res.send(500, 'The contact was not created.');
 				}
 			});
