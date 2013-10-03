@@ -4,8 +4,11 @@
  */
 
 var express = require('express'),
+  colors = require('colors'),
 	mongoose = require('mongoose'),
 	uuid = require('node-uuid'),
+  passport = require('passport'),
+  GoogleStrategy = require('passport-google').Strategy,
 	config = require('./config'),
 	http = require('http'),
 	path = require('path'),
@@ -20,8 +23,48 @@ app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
-app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.session({ secret: 'Le chat est en plastique' }));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(app.router);
+
+// *********************************
+// Configuring Google Authentication
+passport.use(new GoogleStrategy({
+    returnURL: 'http://chris-box-36582.euw1.actionbox.io:3000/auth/google/return',
+    realm: 'http://chris-box-36582.euw1.actionbox.io:3000/'
+  },
+  function(identifier, profile, done) {
+    User.findOrCreate({ openId: identifier }, function(err, user) {
+      done(err, user);
+    });
+  }
+));
+
+// Serialized and deserialized methods when got from session
+passport.serializeUser(function(user, done) {
+    done(null, user);
+});
+
+passport.deserializeUser(function(user, done) {
+    done(null, user);
+});
+
+// Define a middleware function to be used for every secured routes
+var auth = function(req, res, next){
+  if (!req.isAuthenticated()) {
+    console.log('User not authenticated!'.red);
+  	res.send(401);
+  } else {
+    console.log('User not authenticated!'.blue);
+  	next();
+  }
+};
+
+app.get('/auth/google', passport.authenticate('google'));
+app.get('/auth/google/return', passport.authenticate('google', { successRedirect: '/', failureRedirect: '/login' }));
+// *********************************
 
 // connection to MongoDB
 mongoose.connect(config.creds.mongoose_auth);
@@ -29,7 +72,7 @@ mongoose.connect(config.creds.mongoose_auth);
 db = mongoose.connection;
 db.on('error', console.error.bind(console, 'Connection error:'));
 db.once('open', function callback() {
-	console.log("Connection openned...");
+	console.log("Connection openned...".green);
 
 	var UserSchema = mongoose.Schema({
 		email: String,
