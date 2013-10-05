@@ -1,19 +1,25 @@
+/* global require */
 
-/**
- * Module dependencies.
- */
+(function() {
+   "use strict";
+
+   /**
+    * Module dependencies.
+    */
+
+}());
 
 var express = require('express'),
-  colors = require('colors'),
-	mongoose = require('mongoose'),
-	uuid = require('node-uuid'),
-  passport = require('passport'),
-  GoogleStrategy = require('passport-google').Strategy,
-	config = require('./config'),
-	http = require('http'),
-	path = require('path'),
-	app,
-	db;
+   colors = require('colors'),
+   mongoose = require('mongoose'),
+   uuid = require('node-uuid'),
+   passport = require('passport'),
+   GoogleStrategy = require('passport-google').Strategy,
+   config = require('./config'),
+   http = require('http'),
+   path = require('path'),
+   app,
+   db;
 
 app = express();
 
@@ -53,13 +59,13 @@ passport.deserializeUser(function(user, done) {
 
 // Define a middleware function to be used for every secured routes
 var auth = function(req, res, next){
-  if (!req.isAuthenticated()) {
-    console.log('User not authenticated!'.red);
-  	res.send(401);
-  } else {
-    console.log('User not authenticated!'.blue);
-  	next();
-  }
+   if (!req.isAuthenticated()) {
+      console.log('User not authenticated!'.red);
+      res.send(401);
+   } else {
+      console.log('User not authenticated!'.blue);
+      next();
+   }
 };
 
 app.get('/auth/google', passport.authenticate('google'));
