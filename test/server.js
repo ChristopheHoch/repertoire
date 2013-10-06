@@ -2,18 +2,39 @@
    "use strict";
    
    var should = require('chai').should(),
-       foo = 'bar';
+       config = require('../config.js'),
+       server = require('../server.js'),
+       port = process.env.PORT || 3000;
 
-   describe('foo', function() {
-      it('should be a string', function() {
-         foo.should.be.a('string');
+   describe('server', function() {
+      
+      before(function(done) {
+         server.listen(port, function (err, result) {
+            if (err) {
+              done(err);
+            } else {
+              done();
+            }
+         });
       });
-      it('should be equal to bar', function() {
-         foo.should.equal('bar');
+      
+      after(function(done) {
+         server.close();
       });
-      it('should have a length equal to 3', function() {
-         foo.should.have.length(3);
+      
+      it('should exist', function (done) {
+         should.exist(app);
+         done();
       });
+      
+      it('should be listening at localhost', function (done) {
+         var headers = defaultGetOptions('/');
+         http.get(headers, function (res) {
+            res.statusCode.should.eql(404);
+            done();
+         });
+      });
+      
    });
    
 }());
