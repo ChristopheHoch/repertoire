@@ -13,7 +13,7 @@
                strict: true,
                devel: true
             },
-            all: ['GruntFile.js', 'src/*.js']
+            all: ['GruntFile.js', 'src/*.js', 'test/*.js']
          }
       });
    };

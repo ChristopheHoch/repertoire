@@ -13,7 +13,8 @@
     "grunt-contrib-jshint": "~0.6.4",
     "passport": "~0.1.17",
     "passport-google": "~0.3.0",
-    "colors": "~0.6.2"
+    "colors": "~0.6.2",
+    "grunt-mocha-test": "~0.7.0"
   },
   "devDependencies": {
     "chai": "*",
