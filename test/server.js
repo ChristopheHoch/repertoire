@@ -6,7 +6,7 @@
 //       config = require('../config.js'),
        request = require('supertest');
 
-   describe('server', function() {
+   describe('Landing Page', function() {
      
       it('should have an index', function(done) {
          request(app)
