@@ -17,6 +17,9 @@
             all: ['GruntFile.js', 'src/**/*.js', 'test/**/*.js']
          },
          mochaTest: {
+            options: {
+               reporter: 'spec'
+            },
             src: ['test/**/*.js']
          }
       });
