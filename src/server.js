@@ -32,17 +32,15 @@
    app.use(express.static(path.join(__dirname, 'public')));
 
    app.get('/', ensureAuthenticated, function(req, res){
-      res.render('index');
+      res.render('index', { user: req.user });
    });
-
-   function ensureAuthenticated(req, res, next) {
-      if (req.isAuthenticated()) {
-         return next();
-      }
-      res.render('login');
-   }
    
-   app.post('login', passport.authenticate('local',
+   app.get('/logout', function(req, res){
+      req.logout();
+      res.redirect('/');
+   });
+   
+   app.post('/login', passport.authenticate('local',
       {
          failureRedirect: '/login',
          failureFlash: true
@@ -58,5 +56,12 @@
    http.createServer(app).listen(app.get('port'), function(){
       console.log('Express server listening on port ' + app.get('port'));
    });
+   
+   function ensureAuthenticated(req, res, next) {
+      if (req.isAuthenticated()) {
+         return next();
+      }
+      res.render('login');
+   }
 
 }());
