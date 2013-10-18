@@ -12,7 +12,8 @@
          jshint: {
             options: {
                strict: true,
-               devel: true
+               devel: true,
+               ignores: ['src/public/js/vendor/*.js']
             },
             all: ['GruntFile.js', 'src/**/*.js', 'test/**/*.js']
          },
