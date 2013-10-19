@@ -34,20 +34,20 @@
    app.get('/', ensureAuthenticated, function(req, res){
       res.render('index', { user: req.user });
    });
-   
-   app.get('/logout', function(req, res){
-      req.logout();
-      res.redirect('/');
-   });
-   
-   app.post('/login', passport.authenticate('local',
+
+   app.post('/signin', passport.authenticate('local',
       {
-         failureRedirect: '/login',
+         failureRedirect: '/',
          failureFlash: true
       }),
      function(req, res) {
        res.redirect('/');
     });
+   
+   app.post('/signout', function(req, res){
+      req.logout();
+      res.redirect('/');
+   });
    
    if ('development' == app.get('env')) {
       app.use(express.errorHandler());
@@ -61,7 +61,7 @@
       if (req.isAuthenticated()) {
          return next();
       }
-      res.render('login');
+      res.render('signin');
    }
 
 }());
