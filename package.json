@@ -1,6 +1,6 @@
 {
    "name": "cloudrepertoire",
-   "description": "A repertoire in the cloud,
+   "description": "A repertoire in the cloud",
    "version": "0.0.1",
    "private": false,
    "scripts": {
