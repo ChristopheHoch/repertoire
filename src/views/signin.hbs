@@ -1,32 +1,32 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Cloud Repertoire</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Bootstrap -->
-    <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+   <head>
+      <title>Cloud Repertoire</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <!-- Bootstrap -->
+      <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+      <link href="css/signin.css" rel="stylesheet" media="screen">
 
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
+      <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+      <!--[if lt IE 9]>
       <script src="js/vendor/html5shiv.js"></script>
       <script src="js/vendor/respond.min.js"></script>
-    <![endif]-->
-  </head>
-  <body>
-    <h1>Login</h1>
-     <form action="signin" method="post">
-         <div>
-            <label>Username:</label>
-            <input type="text" name="username"/>
-         </div>
-         <div>
-            <label>Password:</label>
-            <input type="password" name="password"/>
-         </div>
-         <div>
-            <input type="submit" value="Log In"/>
-         </div>
-      </form>
+      <![endif]-->
+   </head>
+   <body>
+      <div class="container">
+
+         <form action="signin" method="post" class="form-signin">
+            <h2 class="form-signin-heading">Please sign in</h2>
+            <input type="text" name="username" class="form-control" placeholder="Username" autofocus>
+            <input type="password" name="password" class="form-control" placeholder="Password">
+            {{#if message}}
+            <span class="help-block">{{message}}</span>
+            {{/if}}
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+         </form>
+   
+      </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="js/vendor/jquery-1.10.2.min.js"></script>

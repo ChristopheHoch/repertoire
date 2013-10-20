@@ -9,6 +9,7 @@
        engines = require('consolidate'),
        flash = require('connect-flash'),
        passport = require('./authentication'),
+       sign = require('./routes/sign'),
        config = require('./config'),
        app = express();
 
@@ -35,19 +36,13 @@
       res.render('index', { user: req.user });
    });
 
-   app.post('/signin', passport.authenticate('local',
-      {
-         failureRedirect: '/',
-         failureFlash: true
-      }),
-     function(req, res) {
-       res.redirect('/');
-    });
-   
-   app.post('/signout', function(req, res){
-      req.logout();
-      res.redirect('/');
-   });
+   app.post('/signin',
+            passport.authenticate('local', {
+               failureRedirect: '/',
+               failureFlash: true
+               }),
+            sign.signin);
+   app.post('/signout', sign.signout);
    
    if ('development' == app.get('env')) {
       app.use(express.errorHandler());
@@ -61,7 +56,7 @@
       if (req.isAuthenticated()) {
          return next();
       }
-      res.render('signin');
+      res.render('signin', { message: req.flash('error') });
    }
 
 }());
