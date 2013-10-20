@@ -13,14 +13,17 @@ html
 
    body
       div.container
-
-         form.form-signin(action="signin", method="post")
-            h2.form-signin-heading Please sign in
-            input.form-control(type="text", name="username", placeholder="Username" autofocus)
-            input.form-control(type="password", name="password", placeholder="Password")
-            if message
-               span.help-block= message
-            button.btn.btn-lg.btn-primary.btn-block(type="submit") Sign in
+         div.navbar.navbar-inverse.navbar-fixed-top
+            div.container
+               div.navbar-header
+                  button.navbar-toggle(type="button", data-toggle="collapse", data-target=".navbar-collapse")
+                     span.icon-bar
+                     span.icon-bar
+                     span.icon-bar
+                  a.navbar-brand(href="/") Cloud Repertoire
+               div.navbar-collapse.collapse
+                  form.navbar-form.navbar-right(action="/auth/google", method="post")
+                     input.btn.btn-success(type="submit", value="Sign In with Google")
 
     script(src="js/vendor/jquery-1.10.2.js")
     script(src="js/vendor/bootstrap.min.js")

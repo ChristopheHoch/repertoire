@@ -15,9 +15,9 @@
     "passport": "~0.1.17",
     "colors": "~0.6.2",
     "grunt-mocha-test": "~0.7.0",
-    "passport-local": "~0.1.6",
     "connect-flash": "~0.1.1",
-    "jade": "~0.35.0"
+    "jade": "~0.35.0",
+    "passport-google": "~0.3.0"
   },
   "devDependencies": {
     "chai": "*",

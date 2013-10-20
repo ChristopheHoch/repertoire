@@ -9,7 +9,6 @@
        flash = require('connect-flash'),
        passport = require('./authentication'),
        sign = require('./routes/sign'),
-       config = require('./config'),
        app = express();
 
    module.exports = app;
@@ -33,13 +32,14 @@
    app.get('/', ensureAuthenticated, function(req, res){
       res.render('index', { user: req.user });
    });
+   
+   app.post('/auth/google', passport.authenticate('google'));
+   app.get('/auth/google', 
+           passport.authenticate('google', {
+              successRedirect: '/',
+              failureRedirect: '/'
+           }));
 
-   app.post('/signin',
-            passport.authenticate('local', {
-               failureRedirect: '/',
-               failureFlash: true
-               }),
-            sign.signin);
    app.post('/signout', sign.signout);
    
    if ('development' == app.get('env')) {
