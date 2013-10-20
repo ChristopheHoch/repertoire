@@ -1,0 +1,26 @@
+doctype 5
+html
+   head
+      title Cloud Repertoire
+      meta(name="viewport", content="width=device-width, initial-scale=1.0")
+      
+      link(href="css/bootstrap.min.css", rel="stylesheet", media="screen")
+      link(href="css/signin.css", rel="stylesheet", media="screen")
+
+      //if lt IE 8
+         script(src="js/vendor/html5shiv.js")
+         script(src="js/vendor/respond.min.js")
+
+   body
+      div.container
+
+         form.form-signin(action="signin", method="post")
+            h2.form-signin-heading Please sign in
+            input.form-control(type="text", name="username", placeholder="Username" autofocus)
+            input.form-control(type="password", name="password", placeholder="Password")
+            if message
+               span.help-block= message
+            button.btn.btn-lg.btn-primary.btn-block(type="submit") Sign in
+
+    script(src="js/vendor/jquery-1.10.2.js")
+    script(src="js/vendor/bootstrap.min.js")

@@ -1,28 +1,27 @@
 {
-   "name": "cloudrepertoire",
-   "description": "A repertoire in the cloud",
-   "version": "0.0.1",
-   "private": false,
-   "scripts": {
-   "start": "node src/server.js"
+  "name": "cloudrepertoire",
+  "description": "A repertoire in the cloud",
+  "version": "0.0.1",
+  "private": false,
+  "scripts": {
+    "start": "node src/server.js"
   },
   "dependencies": {
-     "express": "~3.3.4",
-     "mongoose": "~3.6.18",
-     "node-uuid": "~1.4.1",
-     "grunt": "~0.4.1",
-     "grunt-contrib-jshint": "~0.6.4",
-     "passport": "~0.1.17",
-     "colors": "~0.6.2",
-     "grunt-mocha-test": "~0.7.0",
-     "passport-local": "~0.1.6",
-     "connect-flash": "~0.1.1",
-     "handlebars": "~1.0.12",
-     "consolidate": "~0.9.1"
+    "express": "~3.3.4",
+    "mongoose": "~3.6.18",
+    "node-uuid": "~1.4.1",
+    "grunt": "~0.4.1",
+    "grunt-contrib-jshint": "~0.6.4",
+    "passport": "~0.1.17",
+    "colors": "~0.6.2",
+    "grunt-mocha-test": "~0.7.0",
+    "passport-local": "~0.1.6",
+    "connect-flash": "~0.1.1",
+    "jade": "~0.35.0"
   },
   "devDependencies": {
-     "chai": "*",
-     "mocha": "*",
-     "supertest": "~0.8.0"
+    "chai": "*",
+    "mocha": "*",
+    "supertest": "~0.8.0"
   }
 }

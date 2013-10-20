@@ -6,7 +6,6 @@
    var express = require('express'),
        http = require('http'),
        path = require('path'),
-       engines = require('consolidate'),
        flash = require('connect-flash'),
        passport = require('./authentication'),
        sign = require('./routes/sign'),
@@ -16,8 +15,7 @@
    module.exports = app;
    
    app.set('port', process.env.PORT || 3000);
-   app.engine('hbs', engines.handlebars);
-   app.set('view engine', 'hbs');
+   app.set('view engine', 'jade');
    app.set('views', __dirname + '/views');
    app.use(express.logger('dev'));
    app.use(express.favicon());
