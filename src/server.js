@@ -98,6 +98,7 @@
    app.use(express.static(path.join(__dirname, 'public')));
 
    app.get('/', ensureAuthenticated, function(req, res){
+      console.log(req.user);
       res.render('index', { user: req.user });
    });
    

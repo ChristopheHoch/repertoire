@@ -29,8 +29,17 @@ html
                      span.icon-bar
                   a.navbar-brand(href="/") Cloud Repertoire
                div.navbar-collapse.collapse
-                  form.navbar-form.navbar-right(action="signout", method="post")
-                     input.btn(type="submit", value="Sign Out")
+                  ul.nav.navbar-nav.navbar-right
+                     li.dropdown
+                        a.dropdown-toggle(href="#", data-toggle="dropdown")
+                           span.glyphicon.glyphicon-cog
+                        ul.dropdown-menu
+                           li 
+                              a You are connected as 
+                                 span= user.first_name
+                           li
+                              form.navbar-form.navbar-right(action="signout", method="post")
+                                 input.btn(type="submit", value="Sign Out")
       
       script(type="text/x-handlebars", data-template-name="index")
          ul
@@ -40,6 +49,7 @@ html
 
    script(src="js/vendor/jquery-1.10.2.js")
    script(src="js/vendor/handlebars-1.0.0.js")
-   script(src="js/vendor/ember-1.0.0.js")
+   script(src="js/vendor/ember-1.1.0.js")
+   script(src="js/vendor/ember-data.js")
    script(src="js/vendor/bootstrap.min.js")
    script(src="js/app.js")
