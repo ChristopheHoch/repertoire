@@ -8,7 +8,9 @@
        path = require('path'),
        flash = require('connect-flash'),
        mongoose = require('mongoose'),
+       colors = require('colors'),
        Schema = mongoose.Schema,
+       ContactSchema,
        UserSchema,
        User,
 //       passport = require('./authentication'),
@@ -25,10 +27,17 @@
    /**
     * Mongoose
     */
+   ContactSchema = new Schema({
+      first_name: String,
+      last_name: String,
+      email: String
+   });
+   
    UserSchema = new Schema({
       email: String,
       first_name: String,
       last_name: String,
+      contacts: [ContactSchema]
    });
 
    mongoose.connect(db);
@@ -62,7 +71,7 @@
             if(user) {
                done(null, user);
             } else {
-               var user = new User();
+               user = new User();
                user.email = email;
                user.first_name = firstName;
                user.last_name = lastName;
@@ -73,7 +82,7 @@
                   done(null, user);
                });
             }
-         })
+         });
          
       }
    ));
@@ -98,9 +107,9 @@
    app.use(express.static(path.join(__dirname, 'public')));
 
    app.get('/', ensureAuthenticated, function(req, res){
-      console.log(req.user);
       res.render('index', { user: req.user });
    });
+   
    
    app.post('/auth/google', passport.authenticate('google'));
    app.get('/auth/google', 
@@ -110,6 +119,20 @@
            }));
 
    app.post('/signout', sign.signout);
+   
+   app.get('/contacts', ensureAuthenticated, function(req, res) {
+      console.log("GET /contacts".blue);
+      User.find({ id: req.user.id }, 'contacts', function(err, contacts) {
+         if(err) {
+            console.log("Erreur!".red);
+            console.log(err);
+            return err;
+         } else {
+            console.log(contacts);
+            return [{first_name: "Leslie", last_name: "Perret"}];
+         }
+      });
+   });
    
    if ('development' == app.get('env')) {
       app.use(express.errorHandler());

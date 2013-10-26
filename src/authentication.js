@@ -1,6 +1,6 @@
 /* global require */
 
-(function() {
+(function(User) {
    "use strict";
    
    var realm = process.env.REALM || 'http://127.0.0.1:3000',
@@ -10,12 +10,23 @@
    module.exports = passport;
 
    passport.serializeUser(function(user, done) {
-      console.log(user);
-      done(null, user);
+      var email = user.emails[0].value;
+      console.log("Serialize use...");
+      console.log("Email: " + email);
+      done(null, email);
    });
 
    passport.deserializeUser(function(obj, done) {
-      done(null, obj);
+      var email = obj.emails[0].value;
+      console.log("Deserialize use...");
+      console.log("Email: " + email);
+      User.findOne({email: email}, function(err, user) {
+         if(user) {
+            done(null, user);
+         } else {
+            throw err;
+         }
+      });
    });
 
    passport.use(new GoogleStrategy({
@@ -23,12 +34,27 @@
          realm: realm
       },
       function(identifier, profile, done) {
-//         User.findOrCreate({ openId: identifier }, function(err, user) {
-//            done(err, user);
-//         });
-         process.nextTick(function () {
-             done(null, profile);
+         var email = profile.emails[0].value,
+             firstName = profile.name.givenName,
+             lastName = profile.name.familyName;
+         
+         User.findOne({email: email}, function(err, user) {
+            if(user) {
+               done(null, user);
+            } else {
+               user = new User();
+               user.email = email;
+               user.first_name = firstName;
+               user.last_name = lastName;
+               user.save(function(err) {
+                  if(err) { 
+                     throw err;
+                  }
+                  done(null, user);
+               });
+            }
          });
+         
       }
    ));
    

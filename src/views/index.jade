@@ -42,10 +42,28 @@ html
                                  input.btn(type="submit", value="Sign Out")
       
       script(type="text/x-handlebars", data-template-name="index")
-         ul
-            {{#each item in model}}
-            li {{item}}
-            {{/each}}
+         p Template index
+         {{outlet}}
+         
+      script(type="text/x-handlebars", data-template-name="contacts")
+         p Template contacts
+         {{outlet}}
+         
+      script(type="text/x-handlebars", data-template-name="contacts/new")
+         p Template contacts/new
+         {{outlet}}
+         
+      script(type="text/x-handlebars", data-template-name="contact")
+         p Template contact
+         {{outlet}}
+         
+      script(type="text/x-handlebars", data-template-name="contact/index")
+         p Template contact/index
+         {{outlet}}
+         
+      script(type="text/x-handlebars", data-template-name="contact/edit")
+         p Template contact/edit
+         {{outlet}}
 
    script(src="js/vendor/jquery-1.10.2.js")
    script(src="js/vendor/handlebars-1.0.0.js")
