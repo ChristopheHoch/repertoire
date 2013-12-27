@@ -1,27 +1,36 @@
 {
-  "name": "cloudrepertoire",
+  "name": "cloud-repertoire",
   "description": "A repertoire in the cloud",
+  "author": {
+    "name": "Christophe Hoch",
+    "email": "christophe.hoch@gmail.com",
+    "url": "http://christophehoch.fr/"
+  },
   "version": "0.0.1",
   "private": false,
   "scripts": {
-    "start": "node src/server.js"
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ChristopheHoch/repertoire.git"
   },
   "dependencies": {
-    "express": "~3.3.4",
-    "mongoose": "~3.6.18",
-    "node-uuid": "~1.4.1",
-    "grunt": "~0.4.1",
-    "grunt-contrib-jshint": "~0.6.4",
-    "passport": "~0.1.17",
-    "colors": "~0.6.2",
-    "grunt-mocha-test": "~0.7.0",
-    "connect-flash": "~0.1.1",
-    "jade": "~0.35.0",
-    "passport-google": "~0.3.0"
+    "express": "~3.4.7",
+    "require-directory": "~1.2.0",
+    "nconf": "~0.6.9",
+    "mongoose": "~3.8.3",
+    "passport-local": "~0.1.6",
+    "passport": "~0.1.17"
   },
   "devDependencies": {
-    "chai": "*",
-    "mocha": "*",
-    "supertest": "~0.8.0"
+    "grunt-cli": "~0.1.11",
+    "grunt-mocha-test": "~0.8.1",
+    "grunt-contrib-jshint": "~0.8.0",
+    "grunt": "~0.4.2",
+    "grunt-jscoverage": "0.0.3",
+    "grunt-env": "~0.4.1",
+    "mocha": "~1.16.2",
+    "supertest": "~0.8.2"
   }
 }
