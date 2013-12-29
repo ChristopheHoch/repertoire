@@ -21,7 +21,8 @@
     "nconf": "~0.6.9",
     "mongoose": "~3.8.3",
     "passport-local": "~0.1.6",
-    "passport": "~0.1.17"
+    "passport": "~0.1.17",
+    "underscore": "~1.5.2"
   },
   "devDependencies": {
     "grunt-cli": "~0.1.11",
@@ -31,6 +32,7 @@
     "grunt-jscoverage": "0.0.3",
     "grunt-env": "~0.4.1",
     "mocha": "~1.16.2",
-    "supertest": "~0.8.2"
+    "supertest": "~0.8.2",
+    "chai": "~1.8.1"
   }
 }
