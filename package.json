@@ -33,6 +33,7 @@
     "grunt-env": "~0.4.1",
     "mocha": "~1.16.2",
     "supertest": "~0.8.2",
-    "chai": "~1.8.1"
+    "chai": "~1.8.1",
+    "grunt-plato": "~0.2.1"
   }
 }

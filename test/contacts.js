@@ -11,10 +11,10 @@
 
     describe('Cloud Repertoire contacts api', function() {
         var id;
-        
+
         beforeEach(function(done) {
             mongoose.connection.collections.contacts.drop( function(err) {
-      
+
                 var contact = {
                     first_name: "John",
                     last_name: "Doe",
@@ -27,7 +27,7 @@
                 });
             });
         });
-        
+
         afterEach(function(done) {
             mongoose.connection.collections.contacts.remove({ _id: id }, function(err, doc) {
                 done();
@@ -46,7 +46,6 @@
                     assert(_.has(proj, 'first_name'), 'contact should contains a first name');
                     assert(_.has(proj, 'last_name'), 'contact should contains a last name');
                     assert(_.has(proj, 'email'), 'contact should contains an email');
-                    assert(_.has(proj, 'created'), 'contact should contains a creation date');
                     done();
                 });
             });

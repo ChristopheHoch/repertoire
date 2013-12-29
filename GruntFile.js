@@ -7,6 +7,7 @@
         grunt.loadNpmTasks('grunt-contrib-jshint');
         grunt.loadNpmTasks('grunt-mocha-test');
         grunt.loadNpmTasks('grunt-jscoverage');
+        grunt.loadNpmTasks('grunt-plato');
         grunt.loadNpmTasks('grunt-env');
 
         grunt.initConfig({
@@ -48,11 +49,21 @@
                     outputDirectory: 'lib-cov',
                     highlight: true
                 }
+            },
+            plato: {
+                test: {
+                    options: {
+                        exclude: /\.json$|lib\/public\/js\/vendor/
+                    },
+                    files: {
+                        'report': ['lib/**/*.js']
+                    }
+                }
             }
         });
 
-        grunt.registerTask('default', [ 'env:test', 'jshint', 'mochaTest:test' ]);
-        grunt.registerTask('coverage', [ 'env:coverage', 'jscoverage', 'mochaTest:coverage' ]);
+        grunt.registerTask('default', [ 'env:test', 'jshint', 'plato:test', 'mochaTest:test' ]);
+        grunt.registerTask('coverage', [ 'env:coverage', 'plato:test', 'jscoverage', 'mochaTest:coverage' ]);
 
     };
 
