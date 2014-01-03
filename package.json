@@ -10,7 +10,7 @@
     "private": false,
     "scripts": {
         "start": "node src/server.js",
-        "test": "grunt --verbose blanketTest"
+        "test": "grunt"
     },
     "repository": {
         "type": "git",
