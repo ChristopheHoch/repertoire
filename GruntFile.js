@@ -6,6 +6,7 @@
     module.exports = function(grunt) {
         grunt.loadNpmTasks('grunt-contrib-jshint');
         grunt.loadNpmTasks('grunt-mocha-test');
+        grunt.loadNpmTasks('grunt-mocha-cov');
         grunt.loadNpmTasks('grunt-plato');
         grunt.loadNpmTasks('grunt-env');
 
@@ -45,7 +46,19 @@
                     },
                     src: ['test/**/*.js']
                 }
-
+            },
+            mochacov: {
+                coverage: {
+                    options: {
+                        coveralls: {
+                            serviceName: 'travis-ci',
+                            repoToken: 'w3eqkp7Nd0B3Vo59U04t2JXf5tNKpyboi'
+                        }
+                    }
+                },
+                options: {
+                    files: 'test/**/*.js'
+                }
             },
             plato: {
                 test: {
@@ -59,7 +72,7 @@
             }
         });
 
-        grunt.registerTask('default', [ 'env:test', 'jshint', 'plato:test', 'mochaTest' ]);
+        grunt.registerTask('default', [ 'env:test', 'jshint', 'plato:test', 'mochaTest', 'mochacov:coverage' ]);
 
     };
 

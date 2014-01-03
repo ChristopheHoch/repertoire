@@ -10,7 +10,12 @@
     "private": false,
     "scripts": {
         "start": "node src/server.js",
-        "test": "grunt"
+        "test": "grunt",
+        "blanket": {
+            "pattern": [
+                "src"
+            ]
+        }
     },
     "repository": {
         "type": "git",
@@ -45,9 +50,8 @@
         "supertest": "~0.8.2",
         "chai": "~1.8.1",
         "grunt-plato": "~0.2.1",
-        "mocha-lcov-reporter": "0.0.1",
-        "coveralls": "~2.6.1",
         "blanket": "~1.1.6",
-        "travis-cov": "~0.2.4"
+        "travis-cov": "~0.2.4",
+        "grunt-mocha-cov": "~0.1.1"
     }
 }
