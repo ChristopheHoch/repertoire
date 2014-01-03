@@ -1,0 +1,11 @@
+{
+  "express": {
+    "port": 3000
+  },
+  "mongo": {
+    "url":  "mongodb://localhost/repertoire"
+  },
+  "session": {
+    "secret": "th1$1$a$ecret"
+  }
+}
