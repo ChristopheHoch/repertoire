@@ -3,7 +3,7 @@
 (function() {
     "use strict";
 
-    var app = require('../index'),
+     var app = require('../src/server'),
         _ = require('underscore'),
         assert = require('chai').assert,
         mongoose = require('mongoose'),

@@ -3,7 +3,7 @@
 (function() {
     "use strict";
 
-    var app = require('../index'),
+    var app = require('../src/server'),
         request = require('supertest');
 
     describe('Cloud Repertoire landing page', function() {
@@ -17,7 +17,7 @@
             });
         });
     });
-    
+
     describe('Cloud Repertoire missing ressource', function() {
 
         describe('when requesting resource /missing', function() {

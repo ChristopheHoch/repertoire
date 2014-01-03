@@ -10,7 +10,6 @@
         db = require('./database'),
         routes = require('./routes'),
         middleware = require('./middleware'),
-        authentication = require('./authentication'),
         app = express();
 
     app.set('port', config.get('express:port'));
@@ -22,9 +21,6 @@
     app.use(express.json());
     app.use(express.urlencoded());
     app.use(express.cookieParser(config.get('session:secret')));
-
-    app.use(authentication.passport.initialize());
-    app.use(authentication.passport.session());
 
     app.use(app.router);
     app.use(express.static(path.join(__dirname, 'public')));
@@ -38,9 +34,10 @@
     app.post('/contacts', routes.contacts.post);
     app.put('/contacts/:id', routes.contacts.put);
     app.del('/contacts/:id', routes.contacts.del);
-    app.get('/authentication/default',
-            authentication.passport.authenticate('local', { failureRedirect: '/' }),
-            routes.authentication.login);
+
+    app.get('/authentication', routes.authentication.authorization);
+    app.post('/token', routes.authentication.token);
+
     //app.get('/authentication/default/callback', gitHubAuth.passport.authenticate('default', { failureRedirect: '/' }), routes.authentication.callback);
     app.get('/logout', routes.authentication.logout);
     app.use(middleware.notFound.index);

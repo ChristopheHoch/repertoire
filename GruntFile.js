@@ -6,64 +6,60 @@
     module.exports = function(grunt) {
         grunt.loadNpmTasks('grunt-contrib-jshint');
         grunt.loadNpmTasks('grunt-mocha-test');
-        grunt.loadNpmTasks('grunt-jscoverage');
         grunt.loadNpmTasks('grunt-plato');
         grunt.loadNpmTasks('grunt-env');
 
         grunt.initConfig({
             pkg: grunt.file.readJSON('package.json'),
             env: {
-                test: { NODE_ENV: 'test' },
-                coverage: { NODE_ENV: 'coverage', REPERTOIRE_COV: 1 }
+                test: { NODE_ENV: 'test' }
             },
             jshint: {
                 options: {
                     strict: true,
                     devel: true,
-                    ignores: ['lib/public/js/vendor/**/*.js']
+                    ignores: ['src/public/js/vendor/**/*.js']
                 },
-                all: ['GruntFile.js', 'index.js', 'lib/**/*.js', 'test/**/*.js']
+                all: ['GruntFile.js', 'blanket.js', 'src/**/*.js', 'test/**/*.js']
             },
             mochaTest: {
                 test: {
                     options: {
                         ui: 'bdd',
-                        reporter: 'spec'
+                        reporter: 'spec',
+                        require: 'blanket'
                     },
                     src: ['test/**/*.js']
                 },
-                coverage: {
-                    src: ['test/**/*.js'],
+                'html-cov': {
                     options: {
-                        ui: 'bdd',
                         reporter: 'html-cov',
                         quiet: true,
-                        coverage: true,
                         captureFile: 'coverage.html'
-                    }
+                    },
+                    src: ['test/**/*.js']
+                },
+                'travis-cov': {
+                    options: {
+                        reporter: 'travis-cov'
+                    },
+                    src: ['test/**/*.js']
                 }
-            },
-            jscoverage: {
-                options: {
-                    inputDirectory: 'lib',
-                    outputDirectory: 'lib-cov',
-                    highlight: true
-                }
+
             },
             plato: {
                 test: {
                     options: {
-                        exclude: /\.json$|lib\/public\/js\/vendor/
+                        exclude: /\.json$|src\/public\/js\/vendor/
                     },
                     files: {
-                        'report': ['lib/**/*.js']
+                        'report': ['src/**/*.js']
                     }
                 }
             }
         });
 
-        grunt.registerTask('default', [ 'env:test', 'jshint', 'plato:test', 'mochaTest:test' ]);
-        grunt.registerTask('coverage', [ 'env:coverage', 'plato:test', 'jscoverage', 'mochaTest:coverage' ]);
+        grunt.registerTask('default', [ 'env:test', 'jshint', 'plato:test', 'mochaTest' ]);
 
     };
 
