@@ -73,6 +73,7 @@
         });
 
         grunt.registerTask('default', [ 'env:test', 'jshint', 'plato:test', 'mochaTest', 'mochacov:coverage' ]);
+        grunt.registerTask('test', [ 'env:test', 'jshint', 'plato:test', 'mochaTest' ]);
 
     };
 
