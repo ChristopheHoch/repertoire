@@ -1,4 +1,4 @@
-/* global __dirname, module, require */
+/* global module, require */
 
 (function() {
     "use strict";
@@ -7,9 +7,14 @@
 
     function Contact() {}
 
-    Contact.prototype.all = function(callback){
+    Contact.prototype.all = function(callback) {
         ContactSchema.find(function(error, contacts) {
-            if (error) return callback(error, null);
+            if(error) {
+                return callback({
+                    code: 500,
+                    message: 'Internal Server Error'
+                }, null);
+            }
             return callback(null, contacts);
         });
     };

@@ -25,20 +25,14 @@
     app.use(app.router);
     app.use(express.static(path.join(__dirname, 'public')));
 
-    //app.param('id', middleware.id.validate);
-    //app.all('*', middleware.projectForm.addToken);
-    //app.get('/', routes.home.index);
-    app.get('/registration', routes.registration.index);
+    app.post('/registration', routes.registration.index);
     app.get('/contacts', routes.contacts.all);
     app.get('/contacts/:id', routes.contacts.get);
     app.post('/contacts', routes.contacts.post);
     app.put('/contacts/:id', routes.contacts.put);
     app.del('/contacts/:id', routes.contacts.del);
 
-    app.get('/authentication', routes.authentication.authorization);
     app.post('/token', routes.authentication.token);
-
-    //app.get('/authentication/default/callback', gitHubAuth.passport.authenticate('default', { failureRedirect: '/' }), routes.authentication.callback);
     app.get('/logout', routes.authentication.logout);
     app.use(middleware.notFound.index);
 

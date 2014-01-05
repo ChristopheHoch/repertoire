@@ -3,15 +3,16 @@
 (function() {
     "use strict";
 
-    var ContactService = require('../services').contacts,
+    var ensureLoggedIn = require('../middleware').ensureLoggedIn,
+        ContactService = require('../services').contacts,
         Contact = new ContactService();
 
-    exports.all = function(req, res) {
+    function contactsAll(req, res) {
         console.log('Request.' + req.url);
 
         Contact.all(function(error, contacts) {
             if(error) {
-                return res.json(500, 'Internal Server Error');
+                return res.json(error.code, { error: error.message });
             }
             if(!contacts) {
                 contacts = {};
@@ -19,7 +20,12 @@
             return res.json(200, contacts);
         });
 
-    };
+    }
+
+    exports.all = [
+        ensureLoggedIn.index,
+        contactsAll
+    ];
 
     exports.get = function(req, res) {
         console.log('contacts.get');

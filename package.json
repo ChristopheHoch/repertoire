@@ -1,57 +1,59 @@
 {
-    "name": "cloud-repertoire",
-    "description": "A repertoire in the cloud",
-    "author": {
-        "name": "Christophe Hoch",
-        "email": "christophe.hoch@gmail.com",
-        "url": "http://christophehoch.fr/"
-    },
-    "version": "0.0.1",
-    "private": false,
-    "scripts": {
-        "start": "node src/server.js",
-        "test": "grunt",
-        "blanket": {
-            "pattern": [
-                "src"
-            ]
-        }
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/ChristopheHoch/repertoire.git"
-    },
-    "config": {
-        "blanket": {
-            "pattern": "src"
-        },
-        "travis-cov": {
-            "threshold": 70
-        }
-    },
-    "dependencies": {
-        "express": "~3.4.7",
-        "require-directory": "~1.2.0",
-        "nconf": "~0.6.9",
-        "mongoose": "~3.8.3",
-        "passport-local": "~0.1.6",
-        "passport": "~0.1.17",
-        "underscore": "~1.5.2",
-        "oauth2orize": "~1.0.0",
-        "node-uuid": "~1.4.1"
-    },
-    "devDependencies": {
-        "grunt-cli": "~0.1.11",
-        "grunt-mocha-test": "~0.8.1",
-        "grunt-contrib-jshint": "~0.8.0",
-        "grunt": "~0.4.2",
-        "grunt-env": "~0.4.1",
-        "mocha": "~1.16.2",
-        "supertest": "~0.8.2",
-        "chai": "~1.8.1",
-        "grunt-plato": "~0.2.1",
-        "blanket": "~1.1.6",
-        "travis-cov": "~0.2.4",
-        "grunt-mocha-cov": "~0.1.1"
+  "name": "cloud-repertoire",
+  "description": "A repertoire in the cloud",
+  "author": {
+    "name": "Christophe Hoch",
+    "email": "christophe.hoch@gmail.com",
+    "url": "http://christophehoch.fr/"
+  },
+  "version": "0.0.1",
+  "private": false,
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "grunt",
+    "blanket": {
+      "pattern": [
+        "src"
+      ]
     }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ChristopheHoch/repertoire.git"
+  },
+  "config": {
+    "blanket": {
+      "pattern": "src"
+    },
+    "travis-cov": {
+      "threshold": 70
+    }
+  },
+  "dependencies": {
+    "express": "~3.4.7",
+    "require-directory": "~1.2.0",
+    "nconf": "~0.6.9",
+    "mongoose": "~3.8.3",
+    "passport-local": "~0.1.6",
+    "passport": "~0.1.17",
+    "underscore": "~1.5.2",
+    "oauth2orize": "~1.0.0",
+    "node-uuid": "~1.4.1",
+    "passport-oauth2-client-password": "~0.1.1",
+    "connect-ensure-login": "~0.1.1"
+  },
+  "devDependencies": {
+    "grunt-cli": "~0.1.11",
+    "grunt-mocha-test": "~0.8.1",
+    "grunt-contrib-jshint": "~0.8.0",
+    "grunt": "~0.4.2",
+    "grunt-env": "~0.4.1",
+    "mocha": "~1.16.2",
+    "supertest": "~0.8.2",
+    "chai": "~1.8.1",
+    "grunt-plato": "~0.2.1",
+    "blanket": "~1.1.6",
+    "travis-cov": "~0.2.4",
+    "grunt-mocha-cov": "~0.1.1"
+  }
 }

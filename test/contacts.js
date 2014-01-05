@@ -35,19 +35,19 @@
         });
 
         describe('when requesting all contacts', function() {
-            it('should respond with 200', function(done){
+            it('should respond with 401', function(done){
                 request(app)
                 .get('/contacts')
                 .expect('Content-Type', /json/)
-                .expect(200)
-                .end(function(err, res) {
-                    var proj = _.first(JSON.parse(res.text));
-                    assert(_.has(proj, '_id'), 'contact should contains an id');
-                    assert(_.has(proj, 'first_name'), 'contact should contains a first name');
-                    assert(_.has(proj, 'last_name'), 'contact should contains a last name');
-                    assert(_.has(proj, 'email'), 'contact should contains an email');
-                    done();
-                });
+                .expect(401, done);
+//                .end(function(err, res) {
+//                    var proj = _.first(JSON.parse(res.text));
+//                    assert(_.has(proj, '_id'), 'contact should contains an id');
+//                    assert(_.has(proj, 'first_name'), 'contact should contains a first name');
+//                    assert(_.has(proj, 'last_name'), 'contact should contains a last name');
+//                    assert(_.has(proj, 'email'), 'contact should contains an email');
+//                    done();
+//                });
             });
         });
     });
