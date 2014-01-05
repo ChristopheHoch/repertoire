@@ -1,4 +1,4 @@
-/* global describe, it, require */
+/* global afterEach, beforeEach, describe, it, require */
 
 (function() {
     "use strict";
@@ -40,14 +40,6 @@
                 .get('/contacts')
                 .expect('Content-Type', /json/)
                 .expect(401, done);
-//                .end(function(err, res) {
-//                    var proj = _.first(JSON.parse(res.text));
-//                    assert(_.has(proj, '_id'), 'contact should contains an id');
-//                    assert(_.has(proj, 'first_name'), 'contact should contains a first name');
-//                    assert(_.has(proj, 'last_name'), 'contact should contains a last name');
-//                    assert(_.has(proj, 'email'), 'contact should contains an email');
-//                    done();
-//                });
             });
         });
     });

@@ -27,20 +27,4 @@
         contactsAll
     ];
 
-    exports.get = function(req, res) {
-        console.log('contacts.get');
-    };
-
-    exports.post = function(req, res) {
-        console.log('contacts.post');
-    };
-
-    exports.put = function(req, res) {
-        console.log('contacts.put');
-    };
-
-    exports.del = function(req, res) {
-        console.log('contacts.del');
-    };
-
 }());

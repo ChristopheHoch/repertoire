@@ -27,13 +27,8 @@
 
     app.post('/registration', routes.registration.index);
     app.get('/contacts', routes.contacts.all);
-    app.get('/contacts/:id', routes.contacts.get);
-    app.post('/contacts', routes.contacts.post);
-    app.put('/contacts/:id', routes.contacts.put);
-    app.del('/contacts/:id', routes.contacts.del);
 
     app.post('/token', routes.authentication.token);
-    app.get('/logout', routes.authentication.logout);
     app.use(middleware.notFound.index);
 
     http.createServer(app).listen(app.get('port'));

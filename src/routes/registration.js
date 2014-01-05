@@ -6,7 +6,7 @@
     var UserService = require('../services').users,
         User = new UserService();
 
-    exports.index = function(req, res) {
+    function registration(req, res) {
         var email = req.body.email,
             password = req.body.password;
 
@@ -17,6 +17,8 @@
             return res.json(201, user);
         });
 
-    };
+    }
+
+    exports.index = registration;
 
 }());
