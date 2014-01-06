@@ -5,7 +5,7 @@
 
      var app = require('../src/server'),
         _ = require('underscore'),
-        assert = require('chai').assert,
+        should = require('chai').should(),
         mongoose = require('mongoose'),
         request = require('supertest');
 
@@ -39,7 +39,13 @@
                 request(app)
                 .get('/contacts')
                 .expect('Content-Type', /json/)
-                .expect(401, done);
+                .expect(401)
+                .end(function(error, doc) {
+                    var errorMessage = doc.body.error;
+                    should.exist(errorMessage);
+                    errorMessage.should.equal("This ressource is protected, please authenticate first");
+                    done();
+                });
             });
         });
     });

@@ -10,6 +10,12 @@
         var email = req.body.email,
             password = req.body.password;
 
+        if(!email) {
+            res.json(400, { error: "The 'email' field is missing" });
+        }
+        if(!password) {
+            res.json(400, { error: "The 'password' field is missing" });
+        }
         User.post(email, password, function(error, user) {
             if(error) {
                 return res.json(error.code, { error: error.message });
