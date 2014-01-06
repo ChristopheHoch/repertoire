@@ -8,17 +8,17 @@
         Contact = new ContactService();
 
     function contactsAll(req, res) {
-        console.log('Request.' + req.url);
-
-        Contact.all(function(error, contacts) {
-            if(error) {
-                return res.json(error.code, { error: error.message });
-            }
-            if(!contacts) {
-                contacts = {};
-            }
-            return res.json(200, contacts);
-        });
+//        console.log('Request.' + req.url);
+//
+//        Contact.all(function(error, contacts) {
+//            if(error) {
+//                return res.json(error.code, { error: error.message });
+//            }
+//            if(!contacts) {
+//                contacts = {};
+//            }
+//            return res.json(200, contacts);
+//        });
 
     }
 

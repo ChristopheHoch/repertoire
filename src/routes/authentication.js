@@ -5,7 +5,7 @@
 
     var passport = require('passport'),
         authentication = require('../authentication'),
-        Client = require('../models').model('Client');
+        Client = require('../models').client;
 
     exports.token = [
         passport.authenticate(['basic', 'oauth2-client-password'], { session: false }),

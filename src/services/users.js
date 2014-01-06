@@ -3,7 +3,7 @@
 (function() {
     "use strict";
 
-    var UserSchema = require('../models').model('User');
+    var UserSchema = require('../models').user;
 
     function User() {}
 
