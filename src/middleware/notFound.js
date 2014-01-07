@@ -1,10 +1,8 @@
 /* global console, exports */
 
-(function() {
+function notFound(req, res, next) {
     "use strict";
+    res.json(404, { error: 'Ressource not found' });
+}
 
-    exports.index = function(req, res, next) {
-        res.json(404, { error: 'Ressource not found' });
-    };
-
-}());
+exports.index = notFound;

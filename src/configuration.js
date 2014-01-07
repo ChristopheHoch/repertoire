@@ -1,22 +1,20 @@
 /* global module, require */
 
-(function() {
+var nconf = require('nconf');
+
+function Config() {
     "use strict";
 
-    var nconf = require('nconf');
+    var environment;
+    nconf.argv().env('_');
+    environment = nconf.get('NODE:ENV') || 'development';
+    nconf.file(environment, 'config/' + environment + '.json');
+    nconf.file('default', 'config/default.json');
+}
 
-    function Config() {
-        var environment;
-        nconf.argv().env('_');
-        environment = nconf.get('NODE:ENV') || 'development';
-        nconf.file(environment, 'config/' + environment + '.json');
-        nconf.file('default', 'config/default.json');
-    }
+Config.prototype.get = function(key) {
+    "use strict";
+    return nconf.get(key);
+};
 
-    Config.prototype.get = function(key) {
-        return nconf.get(key);
-    };
-
-    module.exports = new Config();
-
-}());
+module.exports = new Config();

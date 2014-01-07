@@ -1,11 +1,8 @@
 /* global module, require */
 
-(function() {
-    "use strict";
-
-    var uuid = require('node-uuid'),
-        //User = require('../models').model('User'),
-        Client = require('../models').client;
+var uuid = require('node-uuid'),
+    //User = require('../models').model('User'),
+    Client = require('../models').client;
 //        AuthorizationCode = require('../models').model('AuthorizationCode'),
 //        AccessToken = require('../models').model('AccessToken');
 
@@ -60,17 +57,17 @@
 //        });
 //    }
 
-    function OAuth2() {
-        var oauth2orize = require('oauth2orize');
+function OAuth2() {
+    "use strict";
 
-        this.server = oauth2orize.createServer();
-//        this.server.serializeClient(serializeClient);
-//        this.server.deserializeClient(deserializeClient);
-//        this.server.grant(oauth2orize.grant.code(grantAuthorization));
-//        this.server.exchange(oauth2orize.exchange.code(exchangeToken));
+    var oauth2orize = require('oauth2orize');
 
-    }
+    this.server = oauth2orize.createServer();
+    //        this.server.serializeClient(serializeClient);
+    //        this.server.deserializeClient(deserializeClient);
+    //        this.server.grant(oauth2orize.grant.code(grantAuthorization));
+    //        this.server.exchange(oauth2orize.exchange.code(exchangeToken));
 
-    module.exports = new OAuth2();
+}
 
-}());
+module.exports = new OAuth2();
