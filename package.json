@@ -40,7 +40,8 @@
     "oauth2orize": "~1.0.0",
     "node-uuid": "~1.4.1",
     "passport-oauth2-client-password": "~0.1.1",
-    "connect-ensure-login": "~0.1.1"
+    "connect-ensure-login": "~0.1.1",
+    "newrelic": "~1.2.0"
   },
   "devDependencies": {
     "grunt-cli": "~0.1.11",
