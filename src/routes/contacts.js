@@ -1,6 +1,7 @@
 /* global console, exports, require */
 
 var ensureLoggedIn = require('../middleware').ensureLoggedIn,
+    passport = require('passport'),
     ContactService = require('../services').contacts,
     Contact = new ContactService();
 
@@ -21,6 +22,6 @@ function contactsAll(req, res) {
 }
 
 exports.all = [
-    ensureLoggedIn.index,
+    passport.authenticate('bearer', { session: false }),
     contactsAll
 ];

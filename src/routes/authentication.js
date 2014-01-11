@@ -1,11 +1,11 @@
 /* global exports, require */
 
 var passport = require('passport'),
-    authentication = require('../authentication'),
+    authentication = require('../authentication').server,
     Client = require('../models').client;
 
 exports.token = [
-    passport.authenticate(['basic', 'oauth2-client-password'], { session: false }),
+    passport.authenticate('basic', { session: false }),
     authentication.server.token(),
     authentication.server.errorHandler()
 ];

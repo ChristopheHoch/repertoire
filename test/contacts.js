@@ -36,14 +36,7 @@ describe('Cloud Repertoire contacts api', function() {
         it('should respond with 401', function(done){
             request(app)
             .get('/contacts')
-            .expect('Content-Type', /json/)
-            .expect(401)
-            .end(function(error, doc) {
-                var errorMessage = doc.body.error;
-                should.exist(errorMessage);
-                errorMessage.should.equal("This ressource is protected, please authenticate first");
-                done();
-            });
+            .expect(401, done);
         });
     });
 });

@@ -9,11 +9,12 @@ function registration(req, res) {
     var email = req.body.email,
         password = req.body.password;
 
+    console.log(req.body);
     if(!email) {
-        res.json(400, { error: "The 'email' field is missing" });
+        return res.json(400, { error: "The 'email' field is missing" });
     }
     if(!password) {
-        res.json(400, { error: "The 'password' field is missing" });
+        return res.json(400, { error: "The 'password' field is missing" });
     }
     User.post(email, password, function(error, user) {
         if(error) {
