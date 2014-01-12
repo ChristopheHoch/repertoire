@@ -1,9 +1,11 @@
 /* global __dirname, module, require */
 
+require('newrelic');
+
 var express = require('express'),
     http = require('http'),
     path = require('path'),
-    passport = require('passport'),
+    passport = require('./authentication').passport,
     config = require('./configuration'),
     db = require('./database'),
     routes = require('./routes'),

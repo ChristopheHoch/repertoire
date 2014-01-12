@@ -1,3 +1,5 @@
+/* global $, DS, Ember */
+
 Ember.Application.initializer({
     name: 'authentication',
     initialize: function(container, application) {
@@ -6,7 +8,7 @@ Ember.Application.initializer({
     }
 });
 
-App = Ember.Application.create({
+var App = Ember.Application.create({
     LOG_TRANSITIONS: true
 });
 
@@ -54,8 +56,8 @@ App.RegisterController  = Ember.ObjectController.extend({
         register: function() {
             "use strict";
             console.log(this.get('email') + '/' + this.get('password'));
-            $.post('/register', { 'email': this.get('email'), 'password': this.get('password') }, function(data) {
-               console.log(data);
+            $.post('/registration', { 'email': this.get('email'), 'password': this.get('password') }, function(data) {
+                console.log(data);
             });
         }
     }

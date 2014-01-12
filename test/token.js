@@ -1,6 +1,7 @@
 /* global afterEach, beforeEach, describe, it, require */
 
 var app = require('../src/server'),
+    UserSchema = require('../src/models').user,
     _ = require('underscore'),
     should = require('chai').should(),
     mongoose = require('mongoose'),
@@ -13,22 +14,21 @@ describe('Cloud Repertoire token', function() {
     beforeEach(function(done) {
         id = undefined;
 
-        mongoose.connection.collections.users.drop( function(error) {
+        var user = new UserSchema({ email: "john@test.com", password: "doe"});
 
-            var user = {
-                email: "john@test.com",
-                password: "doe"
-            };
-
-            mongoose.connection.collections.users.insert(user, function(err, docs) {
-                id = docs[0]._id;
-                done();
-            });
+        user.save(function(error, savedUser) {
+            id = savedUser._id;
+            done();
         });
+
     });
 
     afterEach(function(done) {
-        mongoose.connection.collections.users.remove({ _id: id }, function(err, doc) { });
+        UserSchema.remove({ _id: id }, function(err) {
+            if(err) {
+                console.log(err);
+            }
+        });
         done();
     });
 
@@ -71,8 +71,8 @@ describe('Cloud Repertoire token', function() {
     describe('when login with non-registered email', function() {
         it('should respond with 401', function(done){
             var data = {
-//                grant_type: 'password',
-                email: 'bob@test.com',
+                //                grant_type: 'password',
+                username: 'bob@test.com',
                 password: 'marley'
             };
 
@@ -114,11 +114,9 @@ describe('Cloud Repertoire token', function() {
                 var returnedUser = doc.body;
                 should.not.exist(error);
                 should.exist(returnedUser);
-                should.exist(returnedUser._id);
-                should.exist(returnedUser.email);
-                returnedUser.email.should.equal(user.email);
-                should.exist(returnedUser.password);
-                returnedUser.password.should.equal(user.password);
+                should.exist(returnedUser.access_token);
+                should.exist(returnedUser.token_type);
+                done();
             });
         });
     });

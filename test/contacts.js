@@ -1,6 +1,7 @@
 /* global afterEach, beforeEach, describe, it, require */
 
 var app = require('../src/server'),
+    ContactSchema = require('../src/models').contact,
     _ = require('underscore'),
     should = require('chai').should(),
     mongoose = require('mongoose'),
@@ -11,25 +12,28 @@ describe('Cloud Repertoire contacts api', function() {
     var id;
 
     beforeEach(function(done) {
-        mongoose.connection.collections.contacts.drop( function(err) {
+        id = undefined;
 
-            var contact = {
-                first_name: "John",
-                last_name: "Doe",
-                email: "john.doe@email.com"
-            };
-
-            mongoose.connection.collections.contacts.insert(contact, function(err, docs) {
-                id = docs[0]._id;
-                done();
-            });
+        var contact = new ContactSchema({
+            first_name: "John",
+            last_name: "Doe",
+            email: "john.doe@email.com"
         });
+
+        contact.save(function(error, savedContact) {
+            id = savedContact._id;
+            done();
+        });
+
     });
 
     afterEach(function(done) {
-        mongoose.connection.collections.contacts.remove({ _id: id }, function(err, doc) {
-            done();
+        ContactSchema.remove({ _id: id }, function(err) {
+            if(err) {
+                console.log(err);
+            }
         });
+        done();
     });
 
     describe('when requesting all contacts', function() {

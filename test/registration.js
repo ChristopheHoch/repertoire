@@ -1,6 +1,7 @@
 /* global afterEach, beforeEach, describe, it, require */
 
 var app = require('../src/server'),
+    UserSchema = require('../src/models').user,
     _ = require('underscore'),
     should = require('chai').should(),
     mongoose = require('mongoose'),
@@ -13,23 +14,22 @@ describe('Cloud Repertoire registration api', function() {
     beforeEach(function(done) {
         ids = [];
 
-        mongoose.connection.collections.users.drop( function(error) {
+        var user = new UserSchema({ email: "john@test.com", password: "doe"});
 
-            var user = {
-                email: "john@test.com",
-                password: "doe"
-            };
-
-            mongoose.connection.collections.users.insert(user, function(err, docs) {
-                ids.push(docs[0]._id);
-                done();
-            });
+        user.save(function(error, savedUser) {
+            ids.push(savedUser._id);
+            done();
         });
+
     });
 
     afterEach(function(done) {
         _.each(ids, function(id) {
-            mongoose.connection.collections.users.remove({ _id: id }, function(err, doc) { });
+            UserSchema.remove({ _id: id }, function(err) {
+                if(err) {
+                    console.log(err);
+                }
+            });
         });
         done();
     });

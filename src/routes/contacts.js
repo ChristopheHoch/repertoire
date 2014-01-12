@@ -1,13 +1,13 @@
 /* global console, exports, require */
 
-var ensureLoggedIn = require('../middleware').ensureLoggedIn,
-    passport = require('passport'),
+var passport = require('passport'),
     ContactService = require('../services').contacts,
-    Contact = new ContactService();
+    Contact = new ContactService(),
+    logger = require('../logger').winston;
 
 function contactsAll(req, res) {
     "use strict";
-    //        console.log('Request.' + req.url);
+    logger.silly('Finding all contacts...');
     //
     //        Contact.all(function(error, contacts) {
     //            if(error) {
