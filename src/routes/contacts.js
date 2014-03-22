@@ -8,6 +8,7 @@ var passport = require('passport'),
 function contactsAll(req, res) {
     "use strict";
     logger.silly('Finding all contacts...');
+    logger.silly(req.user.contacts);
     //
     //        Contact.all(function(error, contacts) {
     //            if(error) {

@@ -43,4 +43,13 @@ describe('Cloud Repertoire contacts api', function() {
             .expect(401, done);
         });
     });
+
+    describe('when requesting all contacts with a bearer token', function() {
+        it('should respond with 401', function(done){
+            request(app)
+            .get('/contacts')
+            .set('authorization', 'Bearer 01234567890123456')
+            .expect(401, done);
+        });
+    });
 });

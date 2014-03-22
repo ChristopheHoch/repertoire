@@ -6,18 +6,18 @@ var uuid = require('node-uuid'),
 
 function Token() {}
 
-Token.prototype.generate = function(user, callback) {
+Token.prototype.generate = function(userId, callback) {
     "use strict";
-    logger.silly('Generating a new token...');
+    logger.silly('Generating a new token for user id ' + userId);
 
-    if(!user) {
-        logger.info('The user data was not provided');
+    if(!userId) {
+        logger.info('The user id was not provided');
         return callback({
             code: 400,
             message: 'No user were provided'
         }, null);
     }
-    var token = new TokenSchema({ token: uuid.v4(), user: user.id});
+    var token = new TokenSchema({ token: uuid.v4(), user: userId});
 
     token.save(function(error, savedToken) {
         if(error) {

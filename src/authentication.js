@@ -10,14 +10,6 @@ var passport = require('passport'),
 function handleLocalStrategy(username, password, done) {
     "use strict";
     logger.silly('handleLocalStrategy(username: ' + username + ', password: ' + password + ')');
-    if(!username) {
-        logger.verbose('The email field is missing');
-        return done("The 'email' field is missing");
-    }
-    if(!password) {
-        logger.verbose('The password field is missing');
-        return done("The 'password' field is missing");
-    }
     UserSchema.findOne({"email" : username}, function(err, user) {
         if(err) {
             logger.error('An error occured while looking for user ' + username);
@@ -41,22 +33,31 @@ function handleBearerStrategy(token, done) {
     "use strict";
 
     logger.silly('handleBearerStrategy(token: ' + token + ')');
-    if(!token) {
-        logger.verbose('The token field is missing');
-        return done("The 'token' field is missing");
-    }
-    TokenSchema.findOne({ token: token }, function (err, user) {
+    TokenSchema.findOne({ token: token }, function(err, doc) {
         if(err) {
             logger.error('An error occured while looking for token ' + token);
             logger.error(err);
             return done(err);
         }
-        if(!user) {
-            logger.info('No user were found with token ' + token);
+        if(!doc) {
+            logger.info('No token were found with token ' + token);
             return done(null, false);
         }
-        logger.info('The user ' + user.email + ' has been retrieved for token ' + token);
-        return done(null, user, { scope: 'all' });
+        logger.info('The user ' + doc.user + ' has been retrieved for token ' + token);
+
+        UserSchema.findById(doc.user, function(err, doc) {
+            if(err) {
+                logger.error('An error occured while looking for user ' + doc.user);
+                logger.error(err);
+                return done(err);
+            }
+            if(!doc) {
+                logger.info('No user were found with id ' + doc.user);
+                return done(null, false);
+            }
+            return done(null, doc, { scope: 'all' });
+        });
+
     });
 }
 
