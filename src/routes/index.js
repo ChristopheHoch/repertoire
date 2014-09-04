@@ -2,4 +2,4 @@
 
 var requireDirectory = require('require-directory');
 
-module.exports = requireDirectory(module, __dirname);
+module.exports = requireDirectory(module);

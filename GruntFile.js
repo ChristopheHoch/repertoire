@@ -1,6 +1,6 @@
 /* global module */
 
-module.exports = function(grunt) {
+module.exports = function (grunt) {
     'use strict';
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-mocha-test');
@@ -11,7 +11,9 @@ module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         env: {
-            test: { NODE_ENV: 'test' }
+            test: {
+                NODE_ENV: 'test'
+            }
         },
         jshint: {
             options: {
@@ -70,7 +72,7 @@ module.exports = function(grunt) {
         }
     });
 
-    grunt.registerTask('default', [ 'env:test', 'jshint', 'plato:test', 'mochaTest', 'mochacov:coverage' ]);
-    grunt.registerTask('test', [ 'env:test', 'jshint', 'plato:test', 'mochaTest' ]);
+    grunt.registerTask('default', ['env:test', 'jshint', 'plato:test', 'mochaTest', 'mochacov:coverage']);
+    grunt.registerTask('test', ['env:test', 'jshint', 'plato:test', 'mochaTest']);
 
 };

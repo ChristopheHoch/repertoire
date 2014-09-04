@@ -21,19 +21,22 @@
         app = express();
 
     app.set('port', config.get('express:port'));
-    app.configure('development', function () {
+    if ('development' === app.get('env')) {
         app.use(errorHandler());
         app.use(logger({
             immediate: true,
             format: 'dev'
         }));
-    });
+    }
     app.use(methodOverride());
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({
         extended: true
     }));
-    app.use(cookieParser(config.get('session:secret')));
+    app.use(session({
+        secret: config.get('session:secret')
+    }));
+    app.use(cookieParser());
 
     app.use(passport.initialize());
     app.use(passport.session());

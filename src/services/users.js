@@ -5,15 +5,17 @@ var UserSchema = require('../models').user,
     logger = require('../logger').winston;
 
 function findByEmail(email, callback) {
-    "use strict";
+    'use strict';
     logger.silly('Find user with email: ' + email);
 
-    if(!email) {
+    if (!email) {
         return utils.raiseError(null, 'No email were provided!', callback);
     }
 
-    UserSchema.findOne({"email" : email}, function(err, doc) {
-        if(err) {
+    UserSchema.findOne({
+        email: email
+    }, function (err, doc) {
+        if (err) {
             return utils.raiseError(err, 'An error occured while looking for an user with email ' + email, callback);
         }
         return callback(null, doc);
@@ -24,11 +26,11 @@ function User() {}
 
 User.prototype.findByEmail = findByEmail;
 
-User.prototype.post = function(email, password, callback) {
-    "use strict";
+User.prototype.post = function (email, password, callback) {
+    'use strict';
     logger.silly('Creating a new user...');
 
-    if(!email || !password) {
+    if (!email || !password) {
         logger.warn('Some fields are missing!');
         return callback({
             code: 400,
@@ -36,21 +38,24 @@ User.prototype.post = function(email, password, callback) {
         }, null);
     }
 
-    findByEmail(email, function(err, doc) {
+    findByEmail(email, function (err, doc) {
         var newUser;
-        if(err) {
+        if (err) {
             return callback(err);
         }
-        if(doc) {
+        if (doc) {
             logger.info('The user ' + email + ' tried to registered but already was');
             return callback({
                 code: 409,
                 message: 'User already registered'
             }, null);
         }
-        newUser = new UserSchema({ email: email, password: password});
-        newUser.save(function(error, savedUser) {
-            if(error) {
+        newUser = new UserSchema({
+            email: email,
+            password: password
+        });
+        newUser.save(function (error, savedUser) {
+            if (error) {
                 logger.error('An error occured while savin the user ' + email);
                 logger.error(error);
                 return callback({
