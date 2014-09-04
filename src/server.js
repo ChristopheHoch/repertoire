@@ -1,38 +1,50 @@
 /* global __dirname, module, require */
 
-require('newrelic');
+(function () {
+    'use strict';
+    require('newrelic');
 
-var express = require('express'),
-    http = require('http'),
-    path = require('path'),
-    passport = require('./authentication').passport,
-    config = require('./configuration'),
-    db = require('./database'),
-    routes = require('./routes'),
-    middleware = require('./middleware'),
-    app = express();
+    var express = require('express'),
+        path = require('path'),
+        cookieParser = require('cookie-parser'),
+        logger = require('morgan'),
+        methodOverride = require('method-override'),
+        session = require('express-session'),
+        bodyParser = require('body-parser'),
+        multer = require('multer'),
+        errorHandler = require('errorhandler'),
+        passport = require('./authentication').passport,
+        config = require('./configuration'),
+        db = require('./database'),
+        routes = require('./routes'),
+        middleware = require('./middleware'),
+        app = express();
 
-app.set('port', config.get('express:port'));
-app.configure('development', function() {
-    "use strict";
-    app.use(express.logger({ immediate: true, format: 'dev' }));
-});
-app.use(express.compress());
-app.use(express.methodOverride());
-app.use(express.json());
-app.use(express.urlencoded());
-app.use(express.cookieParser(config.get('session:secret')));
+    app.set('port', config.get('express:port'));
+    app.configure('development', function () {
+        app.use(errorHandler());
+        app.use(logger({
+            immediate: true,
+            format: 'dev'
+        }));
+    });
+    app.use(methodOverride());
+    app.use(bodyParser.json());
+    app.use(bodyParser.urlencoded({
+        extended: true
+    }));
+    app.use(cookieParser(config.get('session:secret')));
 
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(app.router);
-app.use(express.static(path.join(__dirname, 'public')));
+    app.use(passport.initialize());
+    app.use(passport.session());
+    app.use(express.static(path.join(__dirname, 'public')));
 
-app.post('/registration', routes.registration.index);
-app.get('/contacts', routes.contacts.all);
+    app.post('/registration', routes.registration.index);
+    app.get('/contacts', routes.contacts.all);
 
-app.post('/token', routes.authentication.token);
-app.use(middleware.notFound.index);
+    app.post('/token', routes.authentication.token);
+    app.use(middleware.notFound.index);
 
-http.createServer(app).listen(app.get('port'));
-module.exports = app;
+    app.listen(app.get('port'));
+    module.exports = app;
+}());
