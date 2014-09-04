@@ -3,9 +3,9 @@
 var logger = require('../logger').winston;
 
 function raiseError(err, msg, callback) {
-    "use strict";
+    'use strict';
     logger.error(msg);
-    if(err) {
+    if (err) {
         logger.error(err);
     }
     return callback(msg);

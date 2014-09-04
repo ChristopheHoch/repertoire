@@ -12,7 +12,7 @@ function generateToken(req, res) {
 
     if (!user) {
         logger.warn('No user were found to generate a token for');
-        return res.json(500, {
+        return res.status(500).json({
             error: 'Internal server error'
         });
     }
@@ -21,12 +21,12 @@ function generateToken(req, res) {
         if (error) {
             logger.error('An error occured while generating a new token for user ' + user.email);
             logger.error(error);
-            return res.json(error.code, {
+            return res.status(error.code).json({
                 error: error.message
             });
         }
         logger.info('Successfully generated a token for user ' + user.id);
-        return res.json(200, {
+        return res.status(200).json({
             access_token: token.token,
             token_type: 'bearer'
         });

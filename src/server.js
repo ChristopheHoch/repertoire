@@ -2,7 +2,6 @@
 
 (function () {
     'use strict';
-    require('newrelic');
 
     var express = require('express'),
         path = require('path'),
@@ -23,9 +22,8 @@
     app.set('port', config.get('express:port'));
     if ('development' === app.get('env')) {
         app.use(errorHandler());
-        app.use(logger({
-            immediate: true,
-            format: 'dev'
+        app.use(logger('dev', {
+            immediate: true
         }));
     }
     app.use(methodOverride());
