@@ -76,8 +76,7 @@ describe('Cloud Repertoire token', function () {
     describe('when login with non-registered email', function () {
         it('should respond with 401', function (done) {
             var data = {
-                //                grant_type: 'password',
-                username: 'bob@test.com',
+                email: 'bob@test.com',
                 password: 'marley'
             };
 
@@ -91,7 +90,7 @@ describe('Cloud Repertoire token', function () {
     describe('when login with wrong password', function () {
         it('should respond with 401', function (done) {
             var user = {
-                username: 'john@test.com',
+                email: 'john@test.com',
                 password: 'foobar'
             };
 
@@ -105,8 +104,7 @@ describe('Cloud Repertoire token', function () {
     describe('when login with correct credentials', function () {
         it('should respond with 200', function (done) {
             var user = {
-                grant_type: 'password',
-                username: 'john@test.com',
+                email: 'john@test.com',
                 password: 'doe'
             };
 
@@ -116,11 +114,9 @@ describe('Cloud Repertoire token', function () {
                 .expect('Content-Type', /json/)
                 .expect(200)
                 .end(function (error, doc) {
-                    var returnedUser = doc.body;
                     should.not.exist(error);
-                    should.exist(returnedUser);
-                    should.exist(returnedUser.access_token);
-                    should.exist(returnedUser.token_type);
+                    should.exist(doc.body);
+                    should.exist(doc.body.token);
                     done();
                 });
         });

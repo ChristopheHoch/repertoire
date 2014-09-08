@@ -15,7 +15,7 @@ function authenticate(req, res) {
 
     if (!email || !password) {
         logger.verbose('The email or password field is missing');
-        return res.status(401).json({
+        return res.status(400).json({
             error: 'Incorrect login'
         });
     }
@@ -24,6 +24,14 @@ function authenticate(req, res) {
 
         if (err) {
             logger.error('An error occured while fetching the user: ' + email);
+            logger.error(err);
+            return res.status(401).json({
+                error: 'Incorrect login'
+            });
+        }
+
+        if (!user) {
+            logger.verbose('No user were found with the email: ' + email);
             logger.error(err);
             return res.status(401).json({
                 error: 'Incorrect login'
