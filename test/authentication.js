@@ -41,7 +41,7 @@ describe('Cloud Repertoire token', function () {
         it('should respond with 400', function (done) {
 
             request(app)
-                .post('/token')
+                .post('/authenticate')
                 .send({})
                 .expect(400, done);
         });
@@ -54,7 +54,7 @@ describe('Cloud Repertoire token', function () {
             };
 
             request(app)
-                .post('/token')
+                .post('/authenticate')
                 .send(user)
                 .expect(400, done);
         });
@@ -67,7 +67,7 @@ describe('Cloud Repertoire token', function () {
             };
 
             request(app)
-                .post('/token')
+                .post('/authenticate')
                 .send(user)
                 .expect(400, done);
         });
@@ -82,7 +82,7 @@ describe('Cloud Repertoire token', function () {
             };
 
             request(app)
-                .post('/token')
+                .post('/authenticate')
                 .send(data)
                 .expect(401, done);
         });
@@ -96,7 +96,7 @@ describe('Cloud Repertoire token', function () {
             };
 
             request(app)
-                .post('/token')
+                .post('/authenticate')
                 .send(user)
                 .expect(401, done);
         });
@@ -111,7 +111,7 @@ describe('Cloud Repertoire token', function () {
             };
 
             request(app)
-                .post('/token')
+                .post('/authenticate')
                 .send(user)
                 .expect('Content-Type', /json/)
                 .expect(200)

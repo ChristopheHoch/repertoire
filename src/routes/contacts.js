@@ -1,12 +1,11 @@
 /* global console, exports, require */
 
-var passport = require('passport'),
-    ContactService = require('../services').contacts,
+var ContactService = require('../services').contacts,
     Contact = new ContactService(),
     logger = require('../logger').winston;
 
 function contactsAll(req, res) {
-    "use strict";
+    'use strict';
     logger.silly('Finding all contacts...');
     logger.silly(req.user.contacts);
     //
@@ -22,7 +21,4 @@ function contactsAll(req, res) {
 
 }
 
-exports.all = [
-    passport.authenticate('bearer', { session: false }),
-    contactsAll
-];
+exports.all = contactsAll;

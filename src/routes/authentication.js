@@ -1,41 +1,53 @@
 /* global exports, require */
 
-var passport = require('passport'),
-    TokenService = require('../services').tokens,
-    Token = new TokenService(),
+var jwt = require('jsonwebtoken'),
+    config = require('../configuration'),
+    UserService = require('../services').users,
+    User = new UserService(),
     logger = require('../logger').winston;
 
-function generateToken(req, res) {
+function authenticate(req, res) {
     'use strict';
     logger.silly('Generating a new token...');
-    var user = req.user;
 
-    if (!user) {
-        logger.warn('No user were found to generate a token for');
-        return res.status(500).json({
-            error: 'Internal server error'
+    var email = req.body.email,
+        password = req.body.password;
+
+    if (!email || !password) {
+        logger.verbose('The email or password field is missing');
+        return res.status(401).json({
+            error: 'Incorrect login'
         });
     }
 
-    Token.generate(user.id, function (error, token) {
-        if (error) {
-            logger.error('An error occured while generating a new token for user ' + user.email);
-            logger.error(error);
-            return res.status(error.code).json({
-                error: error.message
+    User.findByEmail(email, function (err, user) {
+
+        if (err) {
+            logger.error('An error occured while fetching the user: ' + email);
+            logger.error(err);
+            return res.status(401).json({
+                error: 'Incorrect login'
             });
         }
-        logger.info('Successfully generated a token for user ' + user.id);
-        return res.status(200).json({
-            access_token: token.token,
-            token_type: 'bearer'
+
+        if (user.password !== password) {
+            logger.info('Incorrect login of user: ' + email);
+            return res.status(401).json({
+                error: 'Incorrect login'
+            });
+        }
+
+        // We are sending the profile inside the token
+        var token = jwt.sign(user, config.get('session:secret'), {
+            expiresInMinutes: 60 * 5
         });
+
+        res.json({
+            token: token
+        });
+
     });
+
 }
 
-exports.token = [
-    passport.authenticate('local', {
-        session: false
-    }),
-    generateToken
-];
+exports.index = authenticate;

@@ -3,7 +3,7 @@
 var nconf = require('nconf');
 
 function Config() {
-    "use strict";
+    'use strict';
 
     var environment;
     nconf.argv().env('_');
@@ -12,8 +12,8 @@ function Config() {
     nconf.file('default', 'config/default.json');
 }
 
-Config.prototype.get = function(key) {
-    "use strict";
+Config.prototype.get = function (key) {
+    'use strict';
     return nconf.get(key);
 };
 

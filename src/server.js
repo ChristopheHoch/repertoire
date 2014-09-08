@@ -8,11 +8,10 @@
         cookieParser = require('cookie-parser'),
         logger = require('morgan'),
         methodOverride = require('method-override'),
-        session = require('express-session'),
+        expressJwt = require('express-jwt'),
         bodyParser = require('body-parser'),
         multer = require('multer'),
         errorHandler = require('errorhandler'),
-        passport = require('./authentication').passport,
         config = require('./configuration'),
         db = require('./database'),
         routes = require('./routes'),
@@ -31,19 +30,18 @@
     app.use(bodyParser.urlencoded({
         extended: true
     }));
-    app.use(session({
+    app.use('/api', expressJwt({
         secret: config.get('session:secret')
     }));
     app.use(cookieParser());
 
-    app.use(passport.initialize());
-    app.use(passport.session());
     app.use(express.static(path.join(__dirname, 'public')));
 
     app.post('/registration', routes.registration.index);
-    app.get('/contacts', routes.contacts.all);
+    app.post('/authenticate', routes.authentication.index);
 
-    app.post('/token', routes.authentication.token);
+    app.get('/api/contacts', routes.contacts.all);
+
     app.use(middleware.notFound.index);
 
     app.listen(app.get('port'));
