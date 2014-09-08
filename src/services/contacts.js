@@ -5,11 +5,11 @@ var ContactSchema = require('../models').contact,
 
 function Contact() {}
 
-Contact.prototype.all = function(callback) {
-    "use strict";
+Contact.prototype.all = function (callback) {
+    'use strict';
     logger.silly('Finding all contacts...');
-    ContactSchema.find(function(error, contacts) {
-        if(error) {
+    ContactSchema.find(function (error, contacts) {
+        if (error) {
             return callback({
                 code: 500,
                 message: 'Internal Server Error'

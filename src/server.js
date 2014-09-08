@@ -30,9 +30,6 @@
     app.use(bodyParser.urlencoded({
         extended: true
     }));
-    app.use('/api', expressJwt({
-        secret: config.get('session:secret')
-    }));
     app.use(cookieParser());
 
     app.use(express.static(path.join(__dirname, 'public')));
@@ -40,7 +37,9 @@
     app.post('/registration', routes.registration.index);
     app.post('/authenticate', routes.authentication.index);
 
-    app.get('/api/contacts', routes.contacts.all);
+    app.get('/api/contacts', expressJwt({
+        secret: config.get('session:secret')
+    }), routes.contacts.all);
 
     app.use(middleware.notFound.index);
 
