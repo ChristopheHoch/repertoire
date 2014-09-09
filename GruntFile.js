@@ -19,7 +19,7 @@ module.exports = function (grunt) {
             options: {
                 strict: true,
                 devel: true,
-                ignores: ['src/public/js/vendor/**/*.js']
+                ignores: ['src/public/lib/**/*.js']
             },
             all: ['GruntFile.js', 'blanket.js', 'src/**/*.js', 'test/**/*.js']
         },

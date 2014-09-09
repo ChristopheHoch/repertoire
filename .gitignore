@@ -1,6 +1,6 @@
 node_modules/
 report/
+src/public/lib/
 config/heroku.js
-newrelic_agent.log
 npm-debug.log
 coverage.html
