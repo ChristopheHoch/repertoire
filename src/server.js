@@ -40,6 +40,9 @@
     app.get('/api/contacts', expressJwt({
         secret: config.get('session:secret')
     }), routes.contacts.all);
+    app.get('/api/contacts/:id', expressJwt({
+        secret: config.get('session:secret')
+    }), routes.contacts.find);
 
     app.use(middleware.notFound.index);
 

@@ -6,7 +6,6 @@ var UserSchema = require('../models').user,
 
 function findByEmail(email, callback) {
     'use strict';
-    logger.silly('Find user with email: ' + email);
 
     if (!email) {
         return utils.raiseError(null, 'No email were provided!', callback);
@@ -28,7 +27,6 @@ User.prototype.findByEmail = findByEmail;
 
 User.prototype.post = function (email, password, callback) {
     'use strict';
-    logger.silly('Creating a new user...');
 
     if (!email || !password) {
         logger.warn('Some fields are missing!');
@@ -63,7 +61,6 @@ User.prototype.post = function (email, password, callback) {
                     message: 'Internal Server Error'
                 }, null);
             }
-            logger.info('A new user has been successfully registered with email ' + email);
             return callback(null, savedUser);
         });
     });

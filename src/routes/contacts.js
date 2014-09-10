@@ -4,10 +4,8 @@ var ContactService = require('../services').contacts,
     Contact = new ContactService(),
     logger = require('../logger').winston;
 
-function contactsAll(req, res) {
+function findAllContacts(req, res) {
     'use strict';
-    logger.silly('Finding all contacts...');
-    logger.silly(req.user.contacts);
 
     Contact.all(function (error, contacts) {
         if (error) {
@@ -22,4 +20,29 @@ function contactsAll(req, res) {
     });
 }
 
-exports.all = contactsAll;
+function findOneContact(req, res) {
+    'use strict';
+
+    var userId = req.params.id;
+    if (typeof userId === 'undefined') {
+        return res.status(400).json({
+            error: 'The \'userId\' field is missing'
+        });
+    }
+
+    Contact.find(userId, function (error, contact) {
+        if (error) {
+            logger.error(error);
+            return res.status(error.code).json({
+                error: error.message
+            });
+        }
+        if (!contact) {
+            return res.status(404).end();
+        }
+        return res.status(200).json(contact);
+    });
+}
+
+exports.all = findAllContacts;
+exports.find = findOneContact;

@@ -8,13 +8,11 @@ var jwt = require('jsonwebtoken'),
 
 function authenticate(req, res) {
     'use strict';
-    logger.silly('Generating a new token...');
 
     var email = req.body.email,
         password = req.body.password;
 
     if (!email || !password) {
-        logger.verbose('The email or password field is missing');
         return res.status(400).json({
             error: 'Incorrect login'
         });
@@ -31,15 +29,12 @@ function authenticate(req, res) {
         }
 
         if (!user) {
-            logger.verbose('No user were found with the email: ' + email);
-            logger.error(err);
             return res.status(401).json({
                 error: 'Incorrect login'
             });
         }
 
         if (user.password !== password) {
-            logger.info('Incorrect login of user: ' + email);
             return res.status(401).json({
                 error: 'Incorrect login'
             });

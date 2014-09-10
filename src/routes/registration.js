@@ -7,18 +7,15 @@ var UserService = require('../services').users,
 function registration(req, res) {
     'use strict';
 
-    logger.silly('Registering a new user...');
     var email = req.body.email,
         password = req.body.password;
 
     if (!email) {
-        logger.verbose('The email field is missing');
         return res.status(400).json({
-            error: 'The \'email\' field is missing'
-        });
+    error: 'The \'email\' field is missing'
+});
     }
     if (!password) {
-        logger.verbose('The password field is missing');
         return res.status(400).json({
             error: 'The \'password\' field is missing'
         });

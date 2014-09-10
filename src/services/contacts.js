@@ -7,7 +7,6 @@ function Contact() {}
 
 Contact.prototype.all = function (callback) {
     'use strict';
-    logger.silly('Finding all contacts...');
     ContactSchema.find(function (error, contacts) {
         if (error) {
             return callback({
@@ -16,6 +15,19 @@ Contact.prototype.all = function (callback) {
             }, null);
         }
         return callback(null, contacts);
+    });
+};
+
+Contact.prototype.find = function (id, callback) {
+    'use strict';
+    ContactSchema.findById(id, function (error, contact) {
+        if (error) {
+            return callback({
+                code: 500,
+                message: 'Internal Server Error'
+            }, null);
+        }
+        return callback(null, contact);
     });
 };
 
