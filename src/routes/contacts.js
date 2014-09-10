@@ -11,14 +11,14 @@ function contactsAll(req, res) {
 
     Contact.all(function (error, contacts) {
         if (error) {
-            return res.json(error.code, {
+            return res.status(error.code).json({
                 error: error.message
             });
         }
         if (!contacts) {
             contacts = {};
         }
-        return res.json(200, contacts);
+        return res.status(200).json(contacts);
     });
 }
 
