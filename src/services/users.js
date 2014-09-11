@@ -54,7 +54,7 @@ User.prototype.post = function (email, password, callback) {
         });
         newUser.save(function (error, savedUser) {
             if (error) {
-                logger.error('An error occured while savin the user ' + email);
+                logger.error('An error occured while saving the user ' + email);
                 logger.error(error);
                 return callback({
                     code: 500,

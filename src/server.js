@@ -43,6 +43,9 @@
     app.get('/api/contacts/:id', expressJwt({
         secret: config.get('session:secret')
     }), routes.contacts.find);
+    app.post('/api/contacts', expressJwt({
+        secret: config.get('session:secret')
+    }), routes.contacts.create);
 
     app.use(middleware.notFound.index);
 

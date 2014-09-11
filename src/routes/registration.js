@@ -12,8 +12,8 @@ function registration(req, res) {
 
     if (!email) {
         return res.status(400).json({
-    error: 'The \'email\' field is missing'
-});
+            error: 'The \'email\' field is missing'
+        });
     }
     if (!password) {
         return res.status(400).json({
@@ -22,8 +22,6 @@ function registration(req, res) {
     }
     User.post(email, password, function (error, user) {
         if (error) {
-            logger.error('An error occured while registering a new user with email ' + email);
-            logger.error(error);
             return res.status(error.code).json({
                 error: error.message
             });

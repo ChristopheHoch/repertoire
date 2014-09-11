@@ -1,6 +1,7 @@
 /* global console, exports, require */
 
-var ContactService = require('../services').contacts,
+var _ = require('underscore'),
+    ContactService = require('../services').contacts,
     Contact = new ContactService(),
     logger = require('../logger').winston;
 
@@ -32,7 +33,6 @@ function findOneContact(req, res) {
 
     Contact.find(userId, function (error, contact) {
         if (error) {
-            logger.error(error);
             return res.status(error.code).json({
                 error: error.message
             });
@@ -44,5 +44,59 @@ function findOneContact(req, res) {
     });
 }
 
+function createContact(req, res) {
+    'use strict';
+
+    var body = req.body,
+        firstName = body.firstName,
+        lastName = body.lastName,
+        email = body.email,
+        contactData = {};
+
+    if (typeof firstName === 'undefined' ||
+        typeof lastName === 'undefined' ||
+        typeof email === 'undefined') {
+        return res.status(400).json({
+            error: 'At least one information about the contact should be given'
+        });
+    }
+
+    if (firstName) {
+        _.extend(contactData, {
+            first_name: firstName
+        });
+    }
+    if (lastName) {
+        _.extend(contactData, {
+            last_name: lastName
+        });
+    }
+    if (email) {
+        _.extend(contactData, {
+            email: email
+        });
+    }
+
+    if (_.isEmpty(contactData)) {
+        return res.status(400).json({
+            error: 'At least one information about the contact should be given'
+        });
+    }
+
+    Contact.create(contactData, function (error, contact) {
+        if (error) {
+            return res.status(error.code).json({
+                error: error.message
+            });
+        }
+        if (!contact) {
+            return res.status(500).end();
+        }
+        return res.status(200).json(contact);
+    });
+}
+
+
 exports.all = findAllContacts;
 exports.find = findOneContact;
+exports.create = createContact;

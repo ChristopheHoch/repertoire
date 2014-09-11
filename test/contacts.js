@@ -63,7 +63,7 @@ describe('Cloud Repertoire contacts api', function () {
     });
 
     /**
-     * Test of /api/contacts
+     * Test of GET /api/contacts
      */
     describe('when requesting all contacts without being authenticated', function () {
         it('should respond with 401', function (done) {
@@ -103,10 +103,10 @@ describe('Cloud Repertoire contacts api', function () {
     });
 
     /**
-     * Test of /api/contacts/:id
+     * Test of GET /api/contacts/:id
      */
     describe('when requesting a contact  without being authenticated', function () {
-        it('should respond with 400', function (done) {
+        it('should respond with 401', function (done) {
             request(app)
                 .get('/api/contacts/' + contactId)
                 .expect(401, done);
@@ -137,8 +137,6 @@ describe('Cloud Repertoire contacts api', function () {
                         .expect(500, done);
                 });
 
-
-
         });
     });
 
@@ -165,8 +163,6 @@ describe('Cloud Repertoire contacts api', function () {
                         .set('authorization', bearerToken)
                         .expect(404, done);
                 });
-
-
 
         });
     });
@@ -205,8 +201,42 @@ describe('Cloud Repertoire contacts api', function () {
                         });
                 });
 
+        });
+    });
 
+    /**
+     * Test of POST /api/contacts
+     */
+    describe('when creating a contact  without being authenticated', function () {
+        it('should respond with 401', function (done) {
+            request(app)
+                .post('/api/contacts')
+                .expect(401, done);
+        });
+    });
 
+    describe('when creating a contact without no data', function () {
+        it('should respond with 400', function (done) {
+
+            request(app)
+                .post('/authenticate')
+                .send(userData)
+                .expect('Content-Type', /json/)
+                .expect(200)
+                .end(function (error, doc) {
+                    var bearerToken;
+
+                    should.not.exist(error);
+                    should.exist(doc.body);
+                    should.exist(doc.body.token);
+
+                    bearerToken = 'Bearer ' + doc.body.token;
+
+                    request(app)
+                        .post('/api/contacts')
+                        .set('authorization', bearerToken)
+                        .expect(400, done);
+                });
         });
     });
 
