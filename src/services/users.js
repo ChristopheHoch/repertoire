@@ -29,11 +29,10 @@ User.prototype.post = function (email, password, callback) {
     'use strict';
 
     if (!email || !password) {
-        logger.warn('Some fields are missing!');
-        return callback({
+        return utils.raiseError(null, {
             code: 400,
             message: 'Some fields are missing'
-        }, null);
+        }, callback);
     }
 
     findByEmail(email, function (err, doc) {
@@ -42,11 +41,10 @@ User.prototype.post = function (email, password, callback) {
             return callback(err);
         }
         if (doc) {
-            logger.info('The user ' + email + ' tried to registered but already was');
-            return callback({
+            return utils.raiseError('The user ' + email + ' tried to registered but already was', {
                 code: 409,
                 message: 'User already registered'
-            });
+            }, callback);
         }
         newUser = new UserSchema({
             email: email,
@@ -54,12 +52,10 @@ User.prototype.post = function (email, password, callback) {
         });
         newUser.save(function (error, savedUser) {
             if (error) {
-                logger.error('An error occured while saving the user ' + email);
-                logger.error(error);
-                return callback({
+                return utils.raiseError(error, {
                     code: 500,
-                    message: 'Internal Server Error'
-                });
+                    message: 'An error occured while saving the user ' + email
+                }, callback);
             }
             return callback(null, savedUser);
         });

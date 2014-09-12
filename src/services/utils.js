@@ -3,13 +3,13 @@
 var _ = require('underscore'),
     logger = require('../logger').winston;
 
-function raiseError(err, msg, callback) {
+function raiseError(err, data, callback) {
     'use strict';
-    logger.error(msg);
+    logger.error(data);
     if (err) {
         logger.error(err);
     }
-    return callback(msg);
+    return callback(data);
 }
 
 function extendObject(key, value, object) {

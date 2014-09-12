@@ -1,6 +1,7 @@
 /* global module, require */
 
 var ContactSchema = require('../models').contact,
+    utils = require('./utils'),
     logger = require('../logger').winston;
 
 function Contact() {}
@@ -9,12 +10,10 @@ Contact.prototype.all = function (callback) {
     'use strict';
     ContactSchema.find(function (error, contacts) {
         if (error) {
-            logger.error('An error occured while looking for all contacts');
-            logger.error(error);
-            return callback({
+            return utils.raiseError(error, {
                 code: 500,
-                message: 'Internal Server Error'
-            });
+                message: 'An error occured while looking for all contacts'
+            }, callback);
         }
         return callback(null, contacts);
     });
@@ -24,12 +23,10 @@ Contact.prototype.find = function (id, callback) {
     'use strict';
     ContactSchema.findById(id, function (error, contact) {
         if (error) {
-            logger.error('An error occured while looking for the contact ' + id);
-            logger.error(error);
-            return callback({
+            return utils.raiseError(error, {
                 code: 500,
-                message: 'Internal Server Error'
-            });
+                message: 'An error occured while looking for the contact ' + id
+            }, callback);
         }
         return callback(null, contact);
     });
@@ -42,13 +39,10 @@ Contact.prototype.create = function (contactData, callback) {
 
     ContactSchema.create(newContact, function (error, contact) {
         if (error) {
-            logger.error('An error occured while creating a contact');
-            logger.error(contactData);
-            logger.error(error);
-            return callback({
+            return utils.raiseError(error, {
                 code: 500,
-                message: 'Internal Server Error'
-            });
+                message: 'An error occured while creating a contact'
+            }, callback);
         }
         return callback(null, contact);
     });
@@ -58,12 +52,10 @@ Contact.prototype.destroy = function (id, callback) {
     'use strict';
     ContactSchema.findByIdAndRemove(id, function (error, contact) {
         if (error) {
-            logger.error('An error occured while deleting the contact ' + id);
-            logger.error(error);
-            return callback({
+            return utils.raiseError(error, {
                 code: 500,
-                message: 'Internal Server Error'
-            }, null);
+                message: 'An error occured while deleting the contact ' + id
+            }, callback);
         }
         return callback(null, contact);
     });
