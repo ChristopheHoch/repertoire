@@ -419,6 +419,176 @@ describe('Cloud Repertoire contacts api', function () {
     });
 
     /**
+     * Test of PUT /api/contacts/:id
+     */
+    describe('when deleting a contact  without being authenticated', function () {
+        it('should respond with 401', function (done) {
+            request(app)
+                .put('/api/contacts/' + contactIds[0])
+                .expect(401, done);
+        });
+    });
+
+    describe('when updating a contact with wrong data', function () {
+        it('should respond with 400', function (done) {
+
+            request(app)
+                .post('/authenticate')
+                .send(userData)
+                .expect('Content-Type', /json/)
+                .expect(200)
+                .end(function (error, doc) {
+                    var bearerToken,
+                        wrongContactData;
+
+                    should.not.exist(error);
+                    should.exist(doc.body);
+                    should.exist(doc.body.token);
+
+                    bearerToken = 'Bearer ' + doc.body.token;
+                    wrongContactData = {
+                        name: 'Jack Green'
+                    };
+
+                    request(app)
+                        .put('/api/contacts/' + contactIds[0])
+                        .send(wrongContactData)
+                        .set('authorization', bearerToken)
+                        .expect(400, done);
+                });
+        });
+    });
+
+    describe('when updating an incorrect contact id', function () {
+        it('should respond with 500', function (done) {
+
+            request(app)
+                .post('/authenticate')
+                .send(userData)
+                .expect('Content-Type', /json/)
+                .expect(200)
+                .end(function (error, doc) {
+                    var bearerToken,
+                        updateData;
+
+                    should.not.exist(error);
+                    should.exist(doc.body);
+                    should.exist(doc.body.token);
+
+                    bearerToken = 'Bearer ' + doc.body.token;
+                    updateData = {
+                        firstName: 'Jenny'
+                    };
+
+                    request(app)
+                        .put('/api/contacts/12345')
+                        .send(updateData)
+                        .set('authorization', bearerToken)
+                        .expect(500, done);
+                });
+
+        });
+    });
+
+    describe('when partially updating a correct contact id', function () {
+        it('should respond with 200', function (done) {
+
+            request(app)
+                .post('/authenticate')
+                .send(userData)
+                .expect('Content-Type', /json/)
+                .expect(200)
+                .end(function (error, doc) {
+                    var bearerToken,
+                        updateData;
+
+                    should.not.exist(error);
+                    should.exist(doc.body);
+                    should.exist(doc.body.token);
+
+                    bearerToken = 'Bearer ' + doc.body.token;
+                    updateData = {
+                        firstName: 'Jenny'
+                    };
+
+                    request(app)
+                        .put('/api/contacts/' + contactIds[0])
+                        .send(updateData)
+                        .set('authorization', bearerToken)
+                        .expect(200)
+                        .end(function (error, doc) {
+                            var body = doc.body;
+
+                            should.not.exist(error);
+                            should.exist(body);
+                            should.exist(body._id);
+                            body._id.should.equal(contactIds[0].toString());
+                            should.exist(body.firstName);
+                            body.firstName.should.not.equal(contactData.firstName);
+                            body.firstName.should.equal(updateData.firstName);
+                            should.exist(body.lastName);
+                            body.lastName.should.equal(contactData.lastName);
+                            should.exist(body.email);
+                            body.email.should.equal(contactData.email);
+                            done();
+                        });
+                });
+
+        });
+    });
+
+    describe('when totally updating a correct contact id', function () {
+        it('should respond with 200', function (done) {
+
+            request(app)
+                .post('/authenticate')
+                .send(userData)
+                .expect('Content-Type', /json/)
+                .expect(200)
+                .end(function (error, doc) {
+                    var bearerToken,
+                        updateData;
+
+                    should.not.exist(error);
+                    should.exist(doc.body);
+                    should.exist(doc.body.token);
+
+                    bearerToken = 'Bearer ' + doc.body.token;
+                    updateData = {
+                        firstName: 'Jenny',
+                        lastName: 'Dale',
+                        email: 'jenny.dale@test.com'
+                    };
+
+                    request(app)
+                        .put('/api/contacts/' + contactIds[0])
+                        .send(updateData)
+                        .set('authorization', bearerToken)
+                        .expect(200)
+                        .end(function (error, doc) {
+                            var body = doc.body;
+
+                            should.not.exist(error);
+                            should.exist(body);
+                            should.exist(body._id);
+                            body._id.should.equal(contactIds[0].toString());
+                            should.exist(body.firstName);
+                            body.firstName.should.not.equal(contactData.firstName);
+                            body.firstName.should.equal(updateData.firstName);
+                            should.exist(body.lastName);
+                            body.lastName.should.not.equal(contactData.lastName);
+                            body.lastName.should.equal(updateData.lastName);
+                            should.exist(body.email);
+                            body.email.should.not.equal(contactData.email);
+                            body.email.should.equal(updateData.email);
+                            done();
+                        });
+                });
+
+        });
+    });
+
+    /**
      * Test of DELETE /api/contacts/:id
      */
     describe('when deleting a contact  without being authenticated', function () {

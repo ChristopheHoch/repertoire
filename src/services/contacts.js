@@ -48,6 +48,19 @@ Contact.prototype.create = function (contactData, callback) {
     });
 };
 
+Contact.prototype.update = function (id, update, callback) {
+    'use strict';
+    ContactSchema.findByIdAndUpdate(id, update, function (error, contact) {
+        if (error) {
+            return utils.raiseError(error, {
+                code: 500,
+                message: 'An error occured while deleting the contact ' + id
+            }, callback);
+        }
+        return callback(null, contact);
+    });
+};
+
 Contact.prototype.destroy = function (id, callback) {
     'use strict';
     ContactSchema.findByIdAndRemove(id, function (error, contact) {

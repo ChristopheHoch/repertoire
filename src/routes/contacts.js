@@ -46,14 +46,6 @@ function createContact(req, res) {
         email = body.email,
         contactData = {};
 
-    if (typeof firstName === 'undefined' &&
-        typeof lastName === 'undefined' &&
-        typeof email === 'undefined') {
-        return res.status(400).json({
-            error: 'At least one information about the contact should be given'
-        });
-    }
-
     utils.extendObject('firstName', firstName, contactData);
     utils.extendObject('lastName', lastName, contactData);
     utils.extendObject('email', email, contactData);
@@ -72,6 +64,45 @@ function createContact(req, res) {
         }
         if (!contact) {
             return res.status(500).end();
+        }
+        return res.status(200).json(contact);
+    });
+}
+
+function updateContact(req, res) {
+    'use strict';
+
+    var userId = req.params.id,
+        body = req.body,
+        firstName = body.firstName,
+        lastName = body.lastName,
+        email = body.email,
+        contactData = {};
+
+    if (typeof userId === 'undefined') {
+        return res.status(400).json({
+            error: 'The \'userId\' field is missing'
+        });
+    }
+
+    utils.extendObject('firstName', firstName, contactData);
+    utils.extendObject('lastName', lastName, contactData);
+    utils.extendObject('email', email, contactData);
+
+    if (_.isEmpty(contactData)) {
+        return res.status(400).json({
+            error: 'At least one information about the contact should be given'
+        });
+    }
+
+    Contact.update(userId, contactData, function (error, contact) {
+        if (error) {
+            return res.status(error.code).json({
+                error: error.message
+            });
+        }
+        if (!contact) {
+            return res.status(404).end();
         }
         return res.status(200).json(contact);
     });
@@ -104,4 +135,5 @@ function destroyContact(req, res) {
 exports.all = findAllContacts;
 exports.find = findOneContact;
 exports.create = createContact;
+exports.update = updateContact;
 exports.destroy = destroyContact;

@@ -43,6 +43,7 @@
     app.get('/api/contacts', routes.contacts.all);
     app.get('/api/contacts/:id', routes.contacts.find);
     app.post('/api/contacts', routes.contacts.create);
+    app.put('/api/contacts/:id', routes.contacts.update);
     app.delete('/api/contacts/:id', routes.contacts.destroy);
 
     app.use(middleware.notFound.index);
