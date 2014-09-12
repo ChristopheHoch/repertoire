@@ -15,9 +15,6 @@ function findAllContacts(req, res) {
                 error: error.message
             });
         }
-        if (!contacts) {
-            contacts = {};
-        }
         return res.status(200).json(contacts);
     });
 }

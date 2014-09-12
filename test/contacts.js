@@ -77,7 +77,7 @@ describe('Cloud Repertoire contacts api', function () {
 
     describe('when requesting all contacts with a bearer token', function () {
 
-        it('should respond with 401', function (done) {
+        it('should respond with 200', function (done) {
 
             request(app)
                 .post('/authenticate')
@@ -96,7 +96,65 @@ describe('Cloud Repertoire contacts api', function () {
                     request(app)
                         .get('/api/contacts')
                         .set('authorization', bearerToken)
-                        .expect(200, done);
+                        .expect(200)
+                        .end(function (error, doc) {
+                            var body = doc.body,
+                                contact = body[0];
+
+                            should.not.exist(error);
+                            should.exist(body);
+                            body.length.should.equal(1);
+                            should.exist(contact);
+                            contact.firstName.should.equal(contactData.firstName);
+                            contact.lastName.should.equal(contactData.lastName);
+                            contact.email.should.equal(contactData.email);
+                            done();
+                        });
+                });
+
+
+
+        });
+    });
+
+    describe('when requesting all contacts with a bearer token but no contact does exist', function () {
+
+        it('should respond with an empty object', function (done) {
+
+            ContactSchema.remove({
+                _id: contactIds[0]
+            }, function (err) {
+                if (!err) {
+                    contactIds.pop();
+                }
+            });
+
+            request(app)
+                .post('/authenticate')
+                .send(userData)
+                .expect('Content-Type', /json/)
+                .expect(200)
+                .end(function (error, doc) {
+                    var bearerToken;
+
+                    should.not.exist(error);
+                    should.exist(doc.body);
+                    should.exist(doc.body.token);
+
+                    bearerToken = 'Bearer ' + doc.body.token;
+
+                    request(app)
+                        .get('/api/contacts')
+                        .set('authorization', bearerToken)
+                        .expect(200)
+                        .end(function (error, doc) {
+                            var body = doc.body;
+
+                            should.not.exist(error);
+                            should.exist(body);
+                            body.length.should.equal(0);
+                            done();
+                        });
                 });
 
 
