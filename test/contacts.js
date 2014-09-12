@@ -117,7 +117,7 @@ describe('Cloud Repertoire contacts api', function () {
 
     describe('when requesting a incorrect contact id', function () {
 
-        it('should respond with 404', function (done) {
+        it('should respond with 500', function (done) {
 
             request(app)
                 .post('/authenticate')
@@ -273,7 +273,7 @@ describe('Cloud Repertoire contacts api', function () {
     });
 
     describe('when creating a contact with incomplete data', function () {
-        it('should respond with 400', function (done) {
+        it('should respond with 200', function (done) {
 
             request(app)
                 .post('/authenticate')
@@ -315,7 +315,7 @@ describe('Cloud Repertoire contacts api', function () {
     });
 
     describe('when creating a contact with complete data', function () {
-        it('should respond with 400', function (done) {
+        it('should respond with 200', function (done) {
 
             request(app)
                 .post('/authenticate')
@@ -357,6 +357,100 @@ describe('Cloud Repertoire contacts api', function () {
                             done();
                         });
                 });
+        });
+    });
+
+    /**
+     * Test of DELETE /api/contacts/:id
+     */
+    describe('when deleting a contact  without being authenticated', function () {
+        it('should respond with 401', function (done) {
+            request(app)
+                .delete('/api/contacts/' + contactIds[0])
+                .expect(401, done);
+        });
+    });
+
+    describe('when deleting an incorrect contact id', function () {
+
+        it('should respond with 500', function (done) {
+
+            request(app)
+                .post('/authenticate')
+                .send(userData)
+                .expect('Content-Type', /json/)
+                .expect(200)
+                .end(function (error, doc) {
+                    var bearerToken;
+
+                    should.not.exist(error);
+                    should.exist(doc.body);
+                    should.exist(doc.body.token);
+
+                    bearerToken = 'Bearer ' + doc.body.token;
+
+                    request(app)
+                        .delete('/api/contacts/12345')
+                        .set('authorization', bearerToken)
+                        .expect(500, done);
+                });
+
+        });
+    });
+
+    describe('when deleting a non existing contact id', function () {
+
+        it('should respond with 404', function (done) {
+
+            request(app)
+                .post('/authenticate')
+                .send(userData)
+                .expect('Content-Type', /json/)
+                .expect(200)
+                .end(function (error, doc) {
+                    var bearerToken;
+
+                    should.not.exist(error);
+                    should.exist(doc.body);
+                    should.exist(doc.body.token);
+
+                    bearerToken = 'Bearer ' + doc.body.token;
+
+                    request(app)
+                        .delete('/api/contacts/' + userId)
+                        .set('authorization', bearerToken)
+                        .expect(404, done);
+                });
+
+        });
+    });
+
+    describe('when deleting an existing contact id', function () {
+
+        it('should respond with 200', function (done) {
+
+            request(app)
+                .post('/authenticate')
+                .send(userData)
+                .expect('Content-Type', /json/)
+                .expect(200)
+                .end(function (error, doc) {
+                    var bearerToken,
+                        contactId;
+
+                    should.not.exist(error);
+                    should.exist(doc.body);
+                    should.exist(doc.body.token);
+
+                    bearerToken = 'Bearer ' + doc.body.token;
+                    contactId = contactIds.pop();
+
+                    request(app)
+                        .delete('/api/contacts/' + contactId)
+                        .set('authorization', bearerToken)
+                        .expect(200, done);
+                });
+
         });
     });
 

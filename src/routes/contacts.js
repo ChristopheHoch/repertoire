@@ -1,6 +1,7 @@
 /* global console, exports, require */
 
 var _ = require('underscore'),
+    utils = require('../services').utils,
     ContactService = require('../services').contacts,
     Contact = new ContactService(),
     logger = require('../logger').winston;
@@ -25,11 +26,6 @@ function findOneContact(req, res) {
     'use strict';
 
     var userId = req.params.id;
-    if (typeof userId === 'undefined') {
-        return res.status(400).json({
-            error: 'The \'userId\' field is missing'
-        });
-    }
 
     Contact.find(userId, function (error, contact) {
         if (error) {
@@ -61,21 +57,9 @@ function createContact(req, res) {
         });
     }
 
-    if (firstName) {
-        _.extend(contactData, {
-            firstName: firstName
-        });
-    }
-    if (lastName) {
-        _.extend(contactData, {
-            lastName: lastName
-        });
-    }
-    if (email) {
-        _.extend(contactData, {
-            email: email
-        });
-    }
+    utils.extendObject('firstName', firstName, contactData);
+    utils.extendObject('lastName', lastName, contactData);
+    utils.extendObject('email', email, contactData);
 
     if (_.isEmpty(contactData)) {
         return res.status(400).json({
@@ -111,6 +95,9 @@ function destroyContact(req, res) {
             return res.status(error.code).json({
                 error: error.message
             });
+        }
+        if (!contact) {
+            return res.status(404).end();
         }
         return res.status(200).end();
     });

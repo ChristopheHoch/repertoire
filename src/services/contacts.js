@@ -65,7 +65,7 @@ Contact.prototype.destroy = function (id, callback) {
                 message: 'Internal Server Error'
             }, null);
         }
-        return callback(null);
+        return callback(null, contact);
     });
 };
 

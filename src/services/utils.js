@@ -1,6 +1,7 @@
 /* global exports, require */
 
-var logger = require('../logger').winston;
+var _ = require('underscore'),
+    logger = require('../logger').winston;
 
 function raiseError(err, msg, callback) {
     'use strict';
@@ -11,4 +12,14 @@ function raiseError(err, msg, callback) {
     return callback(msg);
 }
 
+function extendObject(key, value, object) {
+    'use strict';
+    var objectExtension = {};
+    if (value) {
+        objectExtension[key] = value;
+        _.extend(object, objectExtension);
+    }
+}
+
 exports.raiseError = raiseError;
+exports.extendObject = extendObject;
