@@ -63,7 +63,7 @@ module.exports = function (grunt) {
         plato: {
             test: {
                 options: {
-                    exclude: /\.json$|src\/public\/lib/
+                    exclude: /\.json$|src\/public\/lib|report/
                 },
                 files: {
                     'report': ['src/**/*.js']
