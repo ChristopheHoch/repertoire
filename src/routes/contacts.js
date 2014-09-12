@@ -53,8 +53,8 @@ function createContact(req, res) {
         email = body.email,
         contactData = {};
 
-    if (typeof firstName === 'undefined' ||
-        typeof lastName === 'undefined' ||
+    if (typeof firstName === 'undefined' &&
+        typeof lastName === 'undefined' &&
         typeof email === 'undefined') {
         return res.status(400).json({
             error: 'At least one information about the contact should be given'
@@ -63,12 +63,12 @@ function createContact(req, res) {
 
     if (firstName) {
         _.extend(contactData, {
-            first_name: firstName
+            firstName: firstName
         });
     }
     if (lastName) {
         _.extend(contactData, {
-            last_name: lastName
+            lastName: lastName
         });
     }
     if (email) {

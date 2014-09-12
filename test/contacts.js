@@ -11,14 +11,14 @@ var app = require('../src/server'),
 describe('Cloud Repertoire contacts api', function () {
     'use strict';
     var userId,
-        contactId,
+        contactIds,
         userData = {
             email: 'john@test.com',
             password: 'doe'
         },
         contactData = {
-            first_name: 'John',
-            last_name: 'Doe',
+            firstName: 'John',
+            lastName: 'Doe',
             email: 'john.doe@email.com'
         };
 
@@ -33,12 +33,12 @@ describe('Cloud Repertoire contacts api', function () {
         });
 
         /* Ajout d'un contact */
-        contactId = undefined;
+        contactIds = [];
 
         var contact = new ContactSchema(contactData);
 
         contact.save(function (error, savedContact) {
-            contactId = savedContact._id;
+            contactIds.push(savedContact._id);
             done();
         });
 
@@ -52,12 +52,14 @@ describe('Cloud Repertoire contacts api', function () {
                 console.log(err);
             }
         });
-        ContactSchema.remove({
-            _id: contactId
-        }, function (err) {
-            if (err) {
-                console.log(err);
-            }
+        _.each(contactIds, function (contactId) {
+            ContactSchema.remove({
+                _id: contactId
+            }, function (err) {
+                if (err) {
+                    console.log(err);
+                }
+            });
         });
         done();
     });
@@ -108,7 +110,7 @@ describe('Cloud Repertoire contacts api', function () {
     describe('when requesting a contact  without being authenticated', function () {
         it('should respond with 401', function (done) {
             request(app)
-                .get('/api/contacts/' + contactId)
+                .get('/api/contacts/' + contactIds[0])
                 .expect(401, done);
         });
     });
@@ -186,7 +188,7 @@ describe('Cloud Repertoire contacts api', function () {
                     bearerToken = 'Bearer ' + doc.body.token;
 
                     request(app)
-                        .get('/api/contacts/' + contactId)
+                        .get('/api/contacts/' + contactIds[0])
                         .set('authorization', bearerToken)
                         .expect(200)
                         .end(function (error, doc) {
@@ -194,8 +196,8 @@ describe('Cloud Repertoire contacts api', function () {
                             should.not.exist(error);
                             should.exist(contact);
                             should.exist(contact._id);
-                            contact.first_name.should.equal(contactData.first_name);
-                            contact.last_name.should.equal(contactData.last_name);
+                            contact.firstName.should.equal(contactData.firstName);
+                            contact.lastName.should.equal(contactData.lastName);
                             contact.email.should.equal(contactData.email);
                             done();
                         });
@@ -236,6 +238,124 @@ describe('Cloud Repertoire contacts api', function () {
                         .post('/api/contacts')
                         .set('authorization', bearerToken)
                         .expect(400, done);
+                });
+        });
+    });
+
+    describe('when creating a contact with wrong data', function () {
+        it('should respond with 400', function (done) {
+
+            request(app)
+                .post('/authenticate')
+                .send(userData)
+                .expect('Content-Type', /json/)
+                .expect(200)
+                .end(function (error, doc) {
+                    var bearerToken,
+                        wrongContactData;
+
+                    should.not.exist(error);
+                    should.exist(doc.body);
+                    should.exist(doc.body.token);
+
+                    bearerToken = 'Bearer ' + doc.body.token;
+                    wrongContactData = {
+                        name: 'Jack Green'
+                    };
+
+                    request(app)
+                        .post('/api/contacts')
+                        .send(wrongContactData)
+                        .set('authorization', bearerToken)
+                        .expect(400, done);
+                });
+        });
+    });
+
+    describe('when creating a contact with incomplete data', function () {
+        it('should respond with 400', function (done) {
+
+            request(app)
+                .post('/authenticate')
+                .send(userData)
+                .expect('Content-Type', /json/)
+                .expect(200)
+                .end(function (error, doc) {
+                    var bearerToken,
+                        incompleteContactData;
+
+                    should.not.exist(error);
+                    should.exist(doc.body);
+                    should.exist(doc.body.token);
+
+                    bearerToken = 'Bearer ' + doc.body.token;
+                    incompleteContactData = {
+                        firstName: 'Jack'
+                    };
+
+                    request(app)
+                        .post('/api/contacts')
+                        .send(incompleteContactData)
+                        .set('authorization', bearerToken)
+                        .expect(200)
+                        .end(function (error, doc) {
+                            var contact = doc.body;
+                            should.not.exist(error);
+                            should.exist(contact);
+                            should.exist(contact._id);
+                            contactIds.push(contact._id);
+                            should.exist(contact.firstName);
+                            contact.firstName.should.equal(incompleteContactData.firstName);
+                            should.not.exist(contact.lastName);
+                            should.not.exist(contact.email);
+                            done();
+                        });
+                });
+        });
+    });
+
+    describe('when creating a contact with complete data', function () {
+        it('should respond with 400', function (done) {
+
+            request(app)
+                .post('/authenticate')
+                .send(userData)
+                .expect('Content-Type', /json/)
+                .expect(200)
+                .end(function (error, doc) {
+                    var bearerToken,
+                        completeContactData;
+
+                    should.not.exist(error);
+                    should.exist(doc.body);
+                    should.exist(doc.body.token);
+
+                    bearerToken = 'Bearer ' + doc.body.token;
+                    completeContactData = {
+                        firstName: 'Jack',
+                        lastName: 'Green',
+                        email: 'jack.green@test.com'
+                    };
+
+                    request(app)
+                        .post('/api/contacts')
+                        .send(completeContactData)
+                        .set('authorization', bearerToken)
+                        .expect(200)
+                        .end(function (error, doc) {
+                            var contact = doc.body;
+                            should.not.exist(error);
+                            should.exist(contact);
+                            should.exist(contact._id);
+                            contactIds.push(contact._id);
+                            should.exist(contact.firstName);
+                            contact.firstName.should.equal(completeContactData.firstName);
+                            should.exist(contact.lastName);
+                            contact.lastName.should.equal(completeContactData.lastName);
+                            should.exist(contact.email);
+                            contact.email.should.equal(completeContactData.email);
+                            done();
+                        });
                 });
         });
     });
