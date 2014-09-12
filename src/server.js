@@ -31,21 +31,19 @@
         extended: true
     }));
     app.use(cookieParser());
+    app.use('/api', expressJwt({
+        secret: config.get('session:secret')
+    }));
 
     app.use(express.static(path.join(__dirname, 'public')));
 
     app.post('/registration', routes.registration.index);
     app.post('/authenticate', routes.authentication.index);
 
-    app.get('/api/contacts', expressJwt({
-        secret: config.get('session:secret')
-    }), routes.contacts.all);
-    app.get('/api/contacts/:id', expressJwt({
-        secret: config.get('session:secret')
-    }), routes.contacts.find);
-    app.post('/api/contacts', expressJwt({
-        secret: config.get('session:secret')
-    }), routes.contacts.create);
+    app.get('/api/contacts', routes.contacts.all);
+    app.get('/api/contacts/:id', routes.contacts.find);
+    app.post('/api/contacts', routes.contacts.create);
+    app.delete('/api/contacts/:id', routes.contacts.destroy);
 
     app.use(middleware.notFound.index);
 

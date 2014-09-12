@@ -46,7 +46,7 @@ User.prototype.post = function (email, password, callback) {
             return callback({
                 code: 409,
                 message: 'User already registered'
-            }, null);
+            });
         }
         newUser = new UserSchema({
             email: email,
@@ -59,7 +59,7 @@ User.prototype.post = function (email, password, callback) {
                 return callback({
                     code: 500,
                     message: 'Internal Server Error'
-                }, null);
+                });
             }
             return callback(null, savedUser);
         });

@@ -96,7 +96,28 @@ function createContact(req, res) {
     });
 }
 
+function destroyContact(req, res) {
+    'use strict';
+
+    var userId = req.params.id;
+    if (typeof userId === 'undefined') {
+        return res.status(400).json({
+            error: 'The \'userId\' field is missing'
+        });
+    }
+
+    Contact.destroy(userId, function (error, contact) {
+        if (error) {
+            return res.status(error.code).json({
+                error: error.message
+            });
+        }
+        return res.status(200).end();
+    });
+}
+
 
 exports.all = findAllContacts;
 exports.find = findOneContact;
 exports.create = createContact;
+exports.destroy = destroyContact;

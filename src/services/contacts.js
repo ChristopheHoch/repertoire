@@ -14,7 +14,7 @@ Contact.prototype.all = function (callback) {
             return callback({
                 code: 500,
                 message: 'Internal Server Error'
-            }, null);
+            });
         }
         return callback(null, contacts);
     });
@@ -29,7 +29,7 @@ Contact.prototype.find = function (id, callback) {
             return callback({
                 code: 500,
                 message: 'Internal Server Error'
-            }, null);
+            });
         }
         return callback(null, contact);
     });
@@ -48,9 +48,24 @@ Contact.prototype.create = function (contactData, callback) {
             return callback({
                 code: 500,
                 message: 'Internal Server Error'
-            }, null);
+            });
         }
         return callback(null, contact);
+    });
+};
+
+Contact.prototype.destroy = function (id, callback) {
+    'use strict';
+    ContactSchema.findByIdAndRemove(id, function (error, contact) {
+        if (error) {
+            logger.error('An error occured while deleting the contact ' + id);
+            logger.error(error);
+            return callback({
+                code: 500,
+                message: 'Internal Server Error'
+            }, null);
+        }
+        return callback(null);
     });
 };
 
