@@ -76,7 +76,6 @@ describe('Cloud Repertoire contacts api', function () {
     });
 
     describe('when requesting all contacts with a bearer token', function () {
-
         it('should respond with 200', function (done) {
 
             request(app)
@@ -118,7 +117,6 @@ describe('Cloud Repertoire contacts api', function () {
     });
 
     describe('when requesting all contacts with a bearer token but no contact does exist', function () {
-
         it('should respond with an empty object', function (done) {
 
             ContactSchema.remove({
@@ -174,7 +172,6 @@ describe('Cloud Repertoire contacts api', function () {
     });
 
     describe('when requesting a incorrect contact id', function () {
-
         it('should respond with 500', function (done) {
 
             request(app)
@@ -228,7 +225,6 @@ describe('Cloud Repertoire contacts api', function () {
     });
 
     describe('when requesting an existing contact id', function () {
-
         it('should respond with 200', function (done) {
 
             request(app)
@@ -600,7 +596,6 @@ describe('Cloud Repertoire contacts api', function () {
     });
 
     describe('when deleting an incorrect contact id', function () {
-
         it('should respond with 500', function (done) {
 
             request(app)
@@ -627,7 +622,6 @@ describe('Cloud Repertoire contacts api', function () {
     });
 
     describe('when deleting a non existing contact id', function () {
-
         it('should respond with 404', function (done) {
 
             request(app)
@@ -654,7 +648,6 @@ describe('Cloud Repertoire contacts api', function () {
     });
 
     describe('when deleting an existing contact id', function () {
-
         it('should respond with 200', function (done) {
 
             request(app)

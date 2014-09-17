@@ -10,8 +10,7 @@
      *
      * Main module of the application.
      */
-    angular
-        .module('repertoire', [
+    angular.module('repertoire', [
     'ui.router',
     'ngAnimate',
     'ngCookies',

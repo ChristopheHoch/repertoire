@@ -1,15 +1,15 @@
 {
-  "name": "repertoire",
-  "version": "0.0.2",
-  "description": "A repertoire in the cloud",
-  "dependencies": {
-    "angular": "~1.2.23",
-    "angular-ui-router": "~0.2.11",
-    "angular-resource": "~1.2.23",
-    "angular-cookies": "~1.2.23",
-    "angular-sanitize": "~1.2.23",
-    "angular-animate": "~1.2.23",
-    "angular-touch": "~1.2.23",
-    "bootstrap": "~3.2.0"
-  }
+    "name": "repertoire",
+    "version": "0.0.2",
+    "description": "A repertoire in the cloud",
+    "dependencies": {
+        "angular": "~1.2.24",
+        "angular-ui-router": "~0.2.11",
+        "angular-resource": "~1.2.24",
+        "angular-cookies": "~1.2.24",
+        "angular-sanitize": "~1.2.24",
+        "angular-animate": "~1.2.24",
+        "angular-touch": "~1.2.24",
+        "bootstrap": "~3.2.0"
+    }
 }
