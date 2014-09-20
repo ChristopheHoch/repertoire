@@ -19,10 +19,15 @@ describe('Cloud Repertoire contacts api', function () {
         contactData = {
             firstName: 'John',
             lastName: 'Doe',
-            email: 'john.doe@email.com'
+            email: 'john.doe@email.com',
+            address: 'Lyon',
+            location: {
+                'type': 'Point',
+                coordinates: [4.5032, 45.4535]
+            }
         };
 
-    beforeEach(function (done) {
+    before(function (done) {
         /* Ajout d'un utilisateur */
         userId = undefined;
 
@@ -30,8 +35,11 @@ describe('Cloud Repertoire contacts api', function () {
 
         user.save(function (error, savedUser) {
             userId = savedUser._id;
+            done();
         });
+    });
 
+    beforeEach(function (done) {
         /* Ajout d'un contact */
         contactIds = [];
 
@@ -41,17 +49,9 @@ describe('Cloud Repertoire contacts api', function () {
             contactIds.push(savedContact._id);
             done();
         });
-
     });
 
     afterEach(function (done) {
-        UserSchema.remove({
-            _id: userId
-        }, function (err) {
-            if (err) {
-                console.log(err);
-            }
-        });
         _.each(contactIds, function (contactId) {
             ContactSchema.remove({
                 _id: contactId
@@ -60,6 +60,17 @@ describe('Cloud Repertoire contacts api', function () {
                     console.log(err);
                 }
             });
+        });
+        done();
+    });
+
+    after(function (done) {
+        UserSchema.remove({
+            _id: userId
+        }, function (err) {
+            if (err) {
+                console.log(err);
+            }
         });
         done();
     });
@@ -107,6 +118,8 @@ describe('Cloud Repertoire contacts api', function () {
                             contact.firstName.should.equal(contactData.firstName);
                             contact.lastName.should.equal(contactData.lastName);
                             contact.email.should.equal(contactData.email);
+                            contact.address.should.equal(contactData.address);
+                            contact.location.should.eql(contactData.location);
                             done();
                         });
                 });
@@ -253,6 +266,8 @@ describe('Cloud Repertoire contacts api', function () {
                             contact.firstName.should.equal(contactData.firstName);
                             contact.lastName.should.equal(contactData.lastName);
                             contact.email.should.equal(contactData.email);
+                            contact.address.should.equal(contactData.address);
+                            contact.location.should.eql(contactData.location);
                             done();
                         });
                 });
@@ -271,7 +286,7 @@ describe('Cloud Repertoire contacts api', function () {
         });
     });
 
-    describe('when creating a contact without no data', function () {
+    describe('when creating a contact with no data', function () {
         it('should respond with 400', function (done) {
 
             request(app)
@@ -362,6 +377,8 @@ describe('Cloud Repertoire contacts api', function () {
                             contact.firstName.should.equal(incompleteContactData.firstName);
                             should.not.exist(contact.lastName);
                             should.not.exist(contact.email);
+                            should.not.exist(contact.address);
+                            should.not.exist(contact.location);
                             done();
                         });
                 });
@@ -388,7 +405,12 @@ describe('Cloud Repertoire contacts api', function () {
                     completeContactData = {
                         firstName: 'Jack',
                         lastName: 'Green',
-                        email: 'jack.green@test.com'
+                        email: 'jack.green@test.com',
+                        address: 'Paris',
+                        location: {
+                            'type': 'Point',
+                            coordinates: [2.2107, 48.5124]
+                        }
                     };
 
                     request(app)
@@ -402,12 +424,11 @@ describe('Cloud Repertoire contacts api', function () {
                             should.exist(contact);
                             should.exist(contact._id);
                             contactIds.push(contact._id);
-                            should.exist(contact.firstName);
                             contact.firstName.should.equal(completeContactData.firstName);
-                            should.exist(contact.lastName);
                             contact.lastName.should.equal(completeContactData.lastName);
-                            should.exist(contact.email);
                             contact.email.should.equal(completeContactData.email);
+                            contact.address.should.equal(completeContactData.address);
+                            contact.location.should.eql(completeContactData.location);
                             done();
                         });
                 });
@@ -519,13 +540,12 @@ describe('Cloud Repertoire contacts api', function () {
                             should.exist(body);
                             should.exist(body._id);
                             body._id.should.equal(contactIds[0].toString());
-                            should.exist(body.firstName);
                             body.firstName.should.not.equal(contactData.firstName);
                             body.firstName.should.equal(updateData.firstName);
-                            should.exist(body.lastName);
                             body.lastName.should.equal(contactData.lastName);
-                            should.exist(body.email);
                             body.email.should.equal(contactData.email);
+                            body.address.should.equal(contactData.address);
+                            body.location.should.eql(contactData.location);
                             done();
                         });
                 });
@@ -553,7 +573,12 @@ describe('Cloud Repertoire contacts api', function () {
                     updateData = {
                         firstName: 'Jenny',
                         lastName: 'Dale',
-                        email: 'jenny.dale@test.com'
+                        email: 'jenny.dale@test.com',
+                        address: 'Paris',
+                        location: {
+                            'type': 'Point',
+                            coordinates: [2.2107, 48.5124]
+                        }
                     };
 
                     request(app)
@@ -568,15 +593,11 @@ describe('Cloud Repertoire contacts api', function () {
                             should.exist(body);
                             should.exist(body._id);
                             body._id.should.equal(contactIds[0].toString());
-                            should.exist(body.firstName);
-                            body.firstName.should.not.equal(contactData.firstName);
                             body.firstName.should.equal(updateData.firstName);
-                            should.exist(body.lastName);
-                            body.lastName.should.not.equal(contactData.lastName);
                             body.lastName.should.equal(updateData.lastName);
-                            should.exist(body.email);
-                            body.email.should.not.equal(contactData.email);
                             body.email.should.equal(updateData.email);
+                            body.address.should.equal(updateData.address);
+                            body.location.should.eql(updateData.location);
                             done();
                         });
                 });

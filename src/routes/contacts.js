@@ -6,6 +6,20 @@ var _ = require('underscore'),
     Contact = new ContactService(),
     logger = require('../logger').winston;
 
+function extractContactData(body) {
+    'use strict';
+
+    var contactData = {};
+    if (body) {
+        utils.extendObject('firstName', body.firstName, contactData);
+        utils.extendObject('lastName', body.lastName, contactData);
+        utils.extendObject('email', body.email, contactData);
+        utils.extendObject('address', body.address, contactData);
+        utils.extendObject('location', body.location, contactData);
+    }
+    return contactData;
+}
+
 function findAllContacts(req, res) {
     'use strict';
 
@@ -22,9 +36,9 @@ function findAllContacts(req, res) {
 function findOneContact(req, res) {
     'use strict';
 
-    var userId = req.params.id;
+    var contactId = req.params.id;
 
-    Contact.find(userId, function (error, contact) {
+    Contact.find(contactId, function (error, contact) {
         if (error) {
             return res.status(error.code).json({
                 error: error.message
@@ -40,16 +54,7 @@ function findOneContact(req, res) {
 function createContact(req, res) {
     'use strict';
 
-    var body = req.body,
-        firstName = body.firstName,
-        lastName = body.lastName,
-        email = body.email,
-        contactData = {};
-
-    utils.extendObject('firstName', firstName, contactData);
-    utils.extendObject('lastName', lastName, contactData);
-    utils.extendObject('email', email, contactData);
-
+    var contactData = extractContactData(req.body);
     if (_.isEmpty(contactData)) {
         return res.status(400).json({
             error: 'At least one information about the contact should be given'
@@ -72,30 +77,23 @@ function createContact(req, res) {
 function updateContact(req, res) {
     'use strict';
 
-    var userId = req.params.id,
-        body = req.body,
-        firstName = body.firstName,
-        lastName = body.lastName,
-        email = body.email,
-        contactData = {};
+    var contactId = req.params.id,
+        contactData;
 
-    if (typeof userId === 'undefined') {
+    if (typeof contactId === 'undefined') {
         return res.status(400).json({
             error: 'The \'userId\' field is missing'
         });
     }
 
-    utils.extendObject('firstName', firstName, contactData);
-    utils.extendObject('lastName', lastName, contactData);
-    utils.extendObject('email', email, contactData);
-
+    contactData = extractContactData(req.body);
     if (_.isEmpty(contactData)) {
         return res.status(400).json({
             error: 'At least one information about the contact should be given'
         });
     }
 
-    Contact.update(userId, contactData, function (error, contact) {
+    Contact.update(contactId, contactData, function (error, contact) {
         if (error) {
             return res.status(error.code).json({
                 error: error.message
@@ -111,14 +109,14 @@ function updateContact(req, res) {
 function destroyContact(req, res) {
     'use strict';
 
-    var userId = req.params.id;
-    if (typeof userId === 'undefined') {
+    var contactId = req.params.id;
+    if (typeof contactId === 'undefined') {
         return res.status(400).json({
             error: 'The \'userId\' field is missing'
         });
     }
 
-    Contact.destroy(userId, function (error, contact) {
+    Contact.destroy(contactId, function (error, contact) {
         if (error) {
             return res.status(error.code).json({
                 error: error.message
@@ -130,7 +128,6 @@ function destroyContact(req, res) {
         return res.status(200).end();
     });
 }
-
 
 exports.all = findAllContacts;
 exports.find = findOneContact;
