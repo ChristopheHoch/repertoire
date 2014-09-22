@@ -23,7 +23,18 @@ function extractContactData(body) {
 function findAllContacts(req, res) {
     'use strict';
 
-    Contact.all(function (error, contacts) {
+    var location = {
+            'type': 'Point',
+            coordinates: [1.5432, 47.5409]
+            //coordinates: [4.5032, 45.4535]
+        },
+        option = {
+            spherical: true,
+            maxDistance: 5,
+            distanceMultiplier: 1
+        };
+
+    Contact.all(location, option, function (error, contacts) {
         if (error) {
             return res.status(error.code).json({
                 error: error.message

@@ -16,7 +16,7 @@ describe('Cloud Repertoire contacts api', function () {
             email: 'john@test.com',
             password: 'doe'
         },
-        contactData = {
+        contactDataLyon = {
             firstName: 'John',
             lastName: 'Doe',
             email: 'john.doe@email.com',
@@ -43,7 +43,7 @@ describe('Cloud Repertoire contacts api', function () {
         /* Ajout d'un contact */
         contactIds = [];
 
-        var contact = new ContactSchema(contactData);
+        var contact = new ContactSchema(contactDataLyon);
 
         contact.save(function (error, savedContact) {
             contactIds.push(savedContact._id);
@@ -52,26 +52,28 @@ describe('Cloud Repertoire contacts api', function () {
     });
 
     afterEach(function (done) {
-        _.each(contactIds, function (contactId) {
-            ContactSchema.remove({
-                _id: contactId
-            }, function (err) {
-                if (err) {
-                    console.log(err);
-                }
-            });
-        });
+        ContactSchema.remove().exec();
+        //        _.each(contactIds, function (contactId) {
+        //            ContactSchema.remove({
+        //                _id: contactId
+        //            }, function (err) {
+        //                if (err) {
+        //                    console.log(err);
+        //                }
+        //            });
+        //        });
         done();
     });
 
     after(function (done) {
-        UserSchema.remove({
-            _id: userId
-        }, function (err) {
-            if (err) {
-                console.log(err);
-            }
-        });
+        UserSchema.remove().exec();
+        //        UserSchema.remove({
+        //            _id: userId
+        //        }, function (err) {
+        //            if (err) {
+        //                console.log(err);
+        //            }
+        //        });
         done();
     });
 
@@ -109,17 +111,17 @@ describe('Cloud Repertoire contacts api', function () {
                         .expect(200)
                         .end(function (error, doc) {
                             var body = doc.body,
-                                contact = body[0];
+                                contact = body[0].obj;
 
                             should.not.exist(error);
                             should.exist(body);
                             body.length.should.equal(1);
                             should.exist(contact);
-                            contact.firstName.should.equal(contactData.firstName);
-                            contact.lastName.should.equal(contactData.lastName);
-                            contact.email.should.equal(contactData.email);
-                            contact.address.should.equal(contactData.address);
-                            contact.location.should.eql(contactData.location);
+                            contact.firstName.should.equal(contactDataLyon.firstName);
+                            contact.lastName.should.equal(contactDataLyon.lastName);
+                            contact.email.should.equal(contactDataLyon.email);
+                            contact.address.should.equal(contactDataLyon.address);
+                            contact.location.should.eql(contactDataLyon.location);
                             done();
                         });
                 });
@@ -263,11 +265,11 @@ describe('Cloud Repertoire contacts api', function () {
                             should.not.exist(error);
                             should.exist(contact);
                             should.exist(contact._id);
-                            contact.firstName.should.equal(contactData.firstName);
-                            contact.lastName.should.equal(contactData.lastName);
-                            contact.email.should.equal(contactData.email);
-                            contact.address.should.equal(contactData.address);
-                            contact.location.should.eql(contactData.location);
+                            contact.firstName.should.equal(contactDataLyon.firstName);
+                            contact.lastName.should.equal(contactDataLyon.lastName);
+                            contact.email.should.equal(contactDataLyon.email);
+                            contact.address.should.equal(contactDataLyon.address);
+                            contact.location.should.eql(contactDataLyon.location);
                             done();
                         });
                 });
@@ -540,12 +542,12 @@ describe('Cloud Repertoire contacts api', function () {
                             should.exist(body);
                             should.exist(body._id);
                             body._id.should.equal(contactIds[0].toString());
-                            body.firstName.should.not.equal(contactData.firstName);
+                            body.firstName.should.not.equal(contactDataLyon.firstName);
                             body.firstName.should.equal(updateData.firstName);
-                            body.lastName.should.equal(contactData.lastName);
-                            body.email.should.equal(contactData.email);
-                            body.address.should.equal(contactData.address);
-                            body.location.should.eql(contactData.location);
+                            body.lastName.should.equal(contactDataLyon.lastName);
+                            body.email.should.equal(contactDataLyon.email);
+                            body.address.should.equal(contactDataLyon.address);
+                            body.location.should.eql(contactDataLyon.location);
                             done();
                         });
                 });

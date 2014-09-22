@@ -6,9 +6,10 @@ var ContactSchema = require('../models').contact,
 
 function Contact() {}
 
-Contact.prototype.all = function (callback) {
+Contact.prototype.all = function (location, option, callback) {
     'use strict';
-    ContactSchema.find(function (error, contacts) {
+
+    ContactSchema.geoNear(location, option, function (error, contacts) {
         if (error) {
             return utils.raiseError(error, {
                 code: 500,

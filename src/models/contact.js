@@ -30,4 +30,8 @@ ContactSchema.pre('save', function (next) {
     next();
 });
 
+ContactSchema.index({
+    'location': '2dsphere'
+});
+
 module.exports = mongoose.model('Contact', ContactSchema);
